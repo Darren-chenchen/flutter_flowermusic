@@ -1,16 +1,14 @@
-# flutter_flowermusic
+# 阅读之前
 
-A new Flutter application.
+### 1、[部分截图](https://www.jianshu.com/p/ce011acad64e)
 
-## Getting Started
+###2、[Vue项目请点击查看](https://github.com/Darren-chenchen/flowermusic_vue_github)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+# 安卓请扫码下载体验，ios没有证书，无法下载。
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+# 项目结构
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+# 该项目的特点
+
+### 1、使用mvvm架构编写

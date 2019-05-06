@@ -120,7 +120,7 @@ class _MiniPlayerContentState extends State<_MiniPlayerContentPage> with TickerP
                                 width: 35,
                                 height: 35,
                                 key: Key(_provide.currentSong.imgUrl_s ?? ''),
-                                imageUrl: _provide.currentSong.imgUrl_s ?? '',
+                                imageUrl: _provide.currentSong.imgUrl_s ?? 'http://www.yishouhaoge.cn:4001/1555069598726-fj_s23.jpg',
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => AppConfig.getLoadingPlaceHoder(20.0, 20.0),
                                 errorWidget: (context, url, error) => AppConfig.getPlaceHoder(35.0, 35.0),
