@@ -38,7 +38,7 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
 
   Animation<double> _animationMini;
   AnimationController _miniController;
-  final _tranTween = new Tween<Offset>(begin: Offset(0, 0), end: Offset(0, 0));
+  final _tranTween = new Tween<double>(begin: 1, end: 0);
 
   @override
   // TODO: implement wantKeepAlive
@@ -105,10 +105,10 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
   Provide<MainProvide> _initMiniPlayer() {
     return Provide<MainProvide>(
         builder: (BuildContext context, Widget child, MainProvide value) {
-          return Opacity(
-            opacity: _provide.showMini ? 1:0,
-            child: new SlideTransition(
-              position: _tranTween.animate(_animationMini),
+          return Visibility(
+            visible: _provide.showMini,
+            child: new FadeTransition(
+              opacity: _tranTween.animate(_animationMini),
               child: new Container(
                 width: 80,
                 height: 110,

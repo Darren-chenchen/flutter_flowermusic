@@ -61,8 +61,6 @@ class _MiniPlayerContentState extends State<_MiniPlayerContentPage> with TickerP
     animationRecord = new CurvedAnimation(parent: controllerRecord, curve: Curves.linear);
 
     PlayerTools.instance.stateSubject.listen((state) {
-      print(6666666);
-      print(state);
       if (state == AudioToolsState.isPlaying) {
         controllerNeedle.forward();
         controllerRecord.forward();
@@ -72,8 +70,6 @@ class _MiniPlayerContentState extends State<_MiniPlayerContentPage> with TickerP
       }
     });
     animationRecord.addStatusListener((status) {
-      print(7777777);
-      print(status);
       if (status == AnimationStatus.completed && PlayerTools.instance.currentState == AudioToolsState.isPlaying) {
         controllerRecord.repeat();
       } else if (status == AnimationStatus.dismissed) {

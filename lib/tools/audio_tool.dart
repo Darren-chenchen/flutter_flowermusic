@@ -27,10 +27,8 @@ class AudioTools {
     });
     audioPlayer.onAudioPositionChanged.listen((Duration  p) {
       this.progressSubject.value = p.inSeconds;
-      if (p.inSeconds < 2) {
-        Future.delayed(Duration(seconds: 1)).then((value) {
-          setPlayerState(AudioToolsState.isPlaying);
-        });
+      if (p.inMilliseconds <= 200) {
+        setPlayerState(AudioToolsState.isPlaying);
       }
     });
     audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {

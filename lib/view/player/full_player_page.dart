@@ -63,9 +63,6 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     animationRecord = new CurvedAnimation(parent: controllerRecord, curve: Curves.linear);
 
     var s = PlayerTools.instance.stateSubject.listen((state) {
-      print(888);
-      print(controllerNeedle);
-      print(controllerNeedle.status);
       if (state == AudioToolsState.isPlaying) {
         controllerNeedle.forward();
         controllerRecord.forward();
