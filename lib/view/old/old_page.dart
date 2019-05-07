@@ -195,7 +195,7 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
                   onTap: () {
                     _provide.setSongs(index);
                   },
-                  child: new Icon(Icons.play_circle_outline, color: Colors.black87,),),
+                  child: new Icon(Icons.play_circle_outline, color: Colors.black87,size: 28,),),
                 new Expanded(
                     child: new Text(song.duration != '' ? ' 时长：' + CommonUtil.dealDuration(song.duration):'', style: TextStyle(color: Colors.grey, fontSize: 12),textAlign: TextAlign.left)
                 ),

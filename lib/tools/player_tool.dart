@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter_flowermusic/data/song.dart';
+import 'package:flutter_flowermusic/main_provide.dart';
 import 'package:flutter_flowermusic/tools/audio_tool.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:rxdart/rxdart.dart';
@@ -93,6 +94,8 @@ class PlayerTools {
     if (index < songArr.length) {
       this.play(songArr[index]);
     }
+
+    MainProvide.instance.showMini = true;
   }
 
   /// 播放
