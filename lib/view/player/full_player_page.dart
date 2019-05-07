@@ -135,70 +135,77 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     );
   }
 
-  Widget _setupTop() {
-    return new SafeArea(
-        child: new Row(
-          children: <Widget>[
-            new Container(
-              width: 50,
-              child: new OpacityTapWidget(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: new Icon(Icons.close, color: Colors.white,size: 27,),
+  Provide<PlayerProvide> _setupTop() {
+    return Provide<PlayerProvide>(
+        builder: (BuildContext context, Widget child, PlayerProvide value) {
+      return new SafeArea(
+          child: new Row(
+            children: <Widget>[
+              new Container(
+                width: 50,
+                child: new OpacityTapWidget(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: new Icon(Icons.close, color: Colors.white,size: 27,),
+                ),
               ),
-            ),
-            new Expanded(
-              child: new Text(_provide.currentSong.title ?? '',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),textAlign: TextAlign.center,)
-            ),
-            new Container(
-              width: 50,
-            ),
-          ],
-        )
-    );
+              new Expanded(
+                  child: new Text(_provide.currentSong.title ?? '',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),textAlign: TextAlign.center,)
+              ),
+              new Container(
+                width: 50,
+              ),
+            ],
+          )
+      );
+    });
   }
-  Widget _setupMiddle() {
-    return new Container(
-      margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-      child: new Stack(
-        alignment: AlignmentDirectional.topCenter,
-        children: <Widget>[
-          new Container(
+
+  Provide<PlayerProvide> _setupMiddle() {
+    return Provide<PlayerProvide>(
+        builder: (BuildContext context, Widget child, PlayerProvide value) {
+          return new Container(
             margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: new Stack(
-              alignment: AlignmentDirectional.center,
+              alignment: AlignmentDirectional.topCenter,
               children: <Widget>[
-                new Image.asset('images/disc.png'),
-                new ClipOval(
-                  child: new RotationTransition(
-                    turns: _commonTween.animate(animationRecord),
-                    alignment: Alignment.center,
-                    child: new CachedNetworkImage(
-                      width: 160,
-                      height: 160,
-                      key: Key(_provide.currentSong.imgUrl_s ?? ''),
-                      imageUrl: _provide.currentSong.imgUrl_s ?? '',
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => AppConfig.getPlaceHoder(160.0, 160.0),
-                      errorWidget: (context, url, error) => AppConfig.getPlaceHoder(160.0, 160.0),
-                    ),
+                new Container(
+                  margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                  child: new Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: <Widget>[
+                      new Image.asset('images/disc.png'),
+                      new ClipOval(
+                        child: new RotationTransition(
+                          turns: _commonTween.animate(animationRecord),
+                          alignment: Alignment.center,
+                          child: new CachedNetworkImage(
+                            width: 160,
+                            height: 160,
+                            key: Key(_provide.currentSong.imgUrl_s ?? ''),
+                            imageUrl: _provide.currentSong.imgUrl_s ?? '',
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => AppConfig.getPlaceHoder(160.0, 160.0),
+                            errorWidget: (context, url, error) => AppConfig.getPlaceHoder(160.0, 160.0),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
+                ),
+                new Container(
+                  padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
+                  child: new RotationTransition(
+                    alignment: Alignment.topCenter,
+                    turns: _rotateTween.animate(animationNeedle),
+                    child: new Image.asset('images/play_needle.png', width: 150,height: 86,),
+                  ),
+                ),
               ],
             ),
-          ),
-          new Container(
-            padding: EdgeInsets.fromLTRB(40, 0, 0, 0),
-            child: new RotationTransition(
-              alignment: Alignment.topCenter,
-              turns: _rotateTween.animate(animationNeedle),
-              child: new Image.asset('images/play_needle.png', width: 150,height: 86,),
-            ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   Widget _setupBottom() {

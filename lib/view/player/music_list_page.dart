@@ -30,7 +30,7 @@ class MusicListState extends State<MusicListPage> {
             width: 100,
             child: new OpacityTapWidget(
               onTap: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
               },
               child: new Icon(Icons.close, color: Colors.white, size: 36,),
             ),
@@ -58,8 +58,8 @@ class MusicListState extends State<MusicListPage> {
     return new Container(
       child: new OpacityTapWidget(
         onTap: () {
-          PlayerTools.instance.setSongs(PlayerTools.instance.songArr, index);
-          Navigator.of(context).pop();
+          PlayerTools.instance.setIndexPlay(index);
+          Navigator.of(context).pop(true);
         },
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,

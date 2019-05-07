@@ -10,6 +10,7 @@ class PlayerTools {
   final stateSubject = new BehaviorSubject<AudioToolsState>.seeded(AudioToolsState.isStoped);
   final progressSubject = new BehaviorSubject<int>.seeded(0);
   final timerDownSubject = new BehaviorSubject<String>.seeded('');
+  final currentSongSubject = new BehaviorSubject<Song>.seeded(Song());
 
   AudioTools audio;
 
@@ -56,8 +57,11 @@ class PlayerTools {
     _currentPlayIndex = index;
   }
 
-  Song get currentSong => this.currentPlayIndex < this.songArr.length ? this.songArr[this.currentPlayIndex] : Song();
-
+  Song _currentSong = Song();
+  Song get currentSong => _currentSong;
+  set currentSong(Song currentSong) {
+    currentSongSubject.value = currentSong;
+  }
 
   int _currentProgress = 0;
   int get currentProgress => _currentProgress;
@@ -98,8 +102,15 @@ class PlayerTools {
     MainProvide.instance.showMini = true;
   }
 
+  setIndexPlay(int index) {
+    if (index < songArr.length) {
+      this.play(songArr[index]);
+    }
+  }
+
   /// 播放
   Future<int> play(Song song) async {
+    this.currentSong = song;
     return audio.play(song);
   }
   /// 暂停

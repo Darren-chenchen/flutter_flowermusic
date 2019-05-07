@@ -19,6 +19,11 @@ class PlayerProvide extends BaseProvide {
       this.songProgress = CommonUtil.dealDuration(pro);
     });
 
+    PlayerTools.instance.currentSongSubject.listen((song) {
+      this.currentSong = song;
+      this.notify();
+    });
+
     setControlls();
   }
 
@@ -29,8 +34,11 @@ class PlayerProvide extends BaseProvide {
     notify();
   }
 
-  Song get currentSong => PlayerTools.instance.currentSong;
-
+  Song _currentSong = Song();
+  Song get currentSong => _currentSong;
+  set currentSong(Song currentSong) {
+    _currentSong = currentSong;
+  }
   /// 歌曲进度
   String _songProgress = '';
   String get songProgress => _songProgress;
@@ -115,18 +123,46 @@ class PlayerProvide extends BaseProvide {
   }
 
   showMenu(BuildContext context) {
-    Navigator.push(context, new PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (BuildContext context, _, __) {
-          return MusicListPage();
-        },
-        transitionsBuilder: (___, Animation<double> animation, ____, Widget child) {
-          return new FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        }
-    ));
+//    Navigator.push(context, new PageRouteBuilder(
+//        opaque: false,
+//        pageBuilder: (BuildContext context, _, __) {
+//          return MusicListPage();
+//        },
+//        transitionsBuilder: (___, Animation<double> animation, ____, Widget child) {
+//          return new FadeTransition(
+//            opacity: animation,
+//            child: child,
+//          );
+//        }
+//    ));
+
+//    Navigator.push(context, MaterialPageRoute(
+//        builder: (_) => MusicListPage())).then((value) {
+//      if (value) {
+//        this.loginedOrNot();
+//      }
+//    });
+//    pageBuilder: (BuildContext context, _, __) => MusicListPage())).then((value) {
+//    if (value) {
+//    }
+//    },
+    Navigator.push(
+        context,
+        PageRouteBuilder(
+          opaque: false,
+          transitionsBuilder: (___, Animation<double> animation, ____, Widget child) {
+            return new FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          pageBuilder: (BuildContext context, _, __) => MusicListPage(),
+        )
+    ).then((value) {
+      if (value) {
+        this.notify();
+      }
+    });
   }
 
   notify() {
