@@ -12,6 +12,9 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 public class MainActivity extends FlutterActivity {
 
   MethodChannel channel;
+  public String CHANNEL = "darren.com.example.flutterFlowermusic/mutual";
+
+  FlutterPluginBasicTest pluginBasicTest = new FlutterPluginBasicTest();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,7 @@ public class MainActivity extends FlutterActivity {
     Log.d("1111", "1111");
   }
 
-  public static void registerFor(PluginRegistry registrar) {
-    FlutterPluginBasicTest.registerWith(registrar.registrarFor(FlutterPluginBasicTest.CHANNEL));
+  public void registerFor(PluginRegistry registrar) {
+    pluginBasicTest.registerWith(registrar.registrarFor(CHANNEL), this);
   }
 }

@@ -54,7 +54,7 @@ class _MineContentState extends State<_MineContentPage> {
     return new Scaffold(
       backgroundColor: AppConfig.backgroundColor,
       body: new SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 60),
         controller: _scrollControll,
         child: _setupBody(),
       ),
