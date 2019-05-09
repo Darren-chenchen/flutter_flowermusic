@@ -1,6 +1,6 @@
 # 阅读之前
 
-### 1、[部分截图](https://www.jianshu.com/p/ce011acad64e)
+### 1、部分截图
 
 
 ![()](https://raw.githubusercontent.com/Darren-chenchen/flutter_flowermusic/master/screenShots/Simulator%20Screen%20Shot%20-%20iPhone%20X%CA%80%20-%202019-05-06%20at%2018.23.151.png)
@@ -51,6 +51,6 @@ new OpacityTapWidget(
 
 # 最后
 
-### 1、建议大家把重点放在项目加架构的优化上面(mvvm)。
+### 1、建议大家把重点放在项目架构的优化上面(mvvm)。
 
 ### 2、该项目只供学习交流使用，严禁用于商业用途.....
