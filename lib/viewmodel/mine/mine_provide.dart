@@ -26,9 +26,13 @@ class MineProvide extends BaseProvide {
     notifyListeners();
   }
 
+  MineProvide() {
+    this._loginedOrNot();
+  }
+
   final MineRepo _repo = MineRepo();
 
-  loginedOrNot() {
+  _loginedOrNot() {
     var user = AppConfig.userTools.getUserData();
     if (user != null) {
       var userinfo = user as Map<String, dynamic>;
@@ -56,7 +60,7 @@ class MineProvide extends BaseProvide {
     Navigator.push(context, MaterialPageRoute(
         builder: (_) => LoginPage())).then((value) {
       if (value) {
-        this.loginedOrNot();
+        this._loginedOrNot();
       }
     });
   }

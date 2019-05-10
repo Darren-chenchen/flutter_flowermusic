@@ -92,7 +92,7 @@ class _ClassicIndicatorState extends State<ClassicIndicator> {
                     : widget.mode == RefreshStatus.failed
                         ? widget.failedIcon
                         : widget.mode == RefreshStatus.init
-                          ? new Icon(Icons.text_rotation_none)
+                          ? new Container()
                           : new SizedBox(
                             width: 15.0,
                             height: 15.0,

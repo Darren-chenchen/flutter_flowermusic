@@ -88,16 +88,31 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
     );
   }
 
-  Widget _initTabBarView() {
-    return new TabBarView(
-      controller: controller,
-      physics: NeverScrollableScrollPhysics(),
-      children: [
-        _home,
-        _old,
-        _mine,
-      ],
-    );
+  // TabBarView存在页面释放问题
+//  Widget _initTabBarView() {
+//    return new TabBarView(
+//      controller: controller,
+//      physics: NeverScrollableScrollPhysics(),
+//      children: [
+//        _home,
+//        _old,
+//        _mine,
+//      ],
+//    );
+//  }
+
+  Provide<MainProvide> _initTabBarView() {
+    return Provide<MainProvide>(
+        builder: (BuildContext context, Widget child, MainProvide value) {
+          return IndexedStack(
+            index: _provide.currentIndex,
+            children: <Widget>[
+              _home,
+              _old,
+              _mine
+            ],
+          );
+        });
   }
 
   Provide<MainProvide> _initMiniPlayer() {

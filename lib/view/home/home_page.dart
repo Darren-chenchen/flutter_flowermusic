@@ -4,6 +4,7 @@ import 'package:flutter_flowermusic/base/app_config.dart';
 import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/data/song.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
+import 'package:flutter_flowermusic/main_provide.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/view/home/comment_page.dart';

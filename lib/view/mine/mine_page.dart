@@ -51,9 +51,9 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
 
     _scrollControll = ScrollController();
 
+    print("mine===initState");
+    print(widget.provide);
     _provide ??= widget.provide;
-
-    _provide.loginedOrNot();
   }
   @override
   Widget build(BuildContext context) {
