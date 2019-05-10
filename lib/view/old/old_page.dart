@@ -77,6 +77,7 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
   void dispose() {
     super.dispose();
     print("老歌释放");
+    _subscriptions.dispose();
   }
 
   @override

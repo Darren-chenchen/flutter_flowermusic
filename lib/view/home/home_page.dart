@@ -72,6 +72,8 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
         }
       }
     });
+
+    print("首页--initState");
   }
 
   @override

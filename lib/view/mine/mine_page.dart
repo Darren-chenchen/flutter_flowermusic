@@ -33,7 +33,7 @@ class _MineContentPage extends StatefulWidget {
   }
 }
 
-class _MineContentState extends State<_MineContentPage> {
+class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveClientMixin{
   MineProvide _provide;
   final _subscriptions = CompositeSubscription();
 
@@ -41,13 +41,19 @@ class _MineContentState extends State<_MineContentPage> {
   ScrollController _scrollControll;
 
   @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _scrollControll = ScrollController();
+
     _provide ??= widget.provide;
 
     _provide.loginedOrNot();
-    _scrollControll = ScrollController();
   }
   @override
   Widget build(BuildContext context) {
@@ -65,26 +71,27 @@ class _MineContentState extends State<_MineContentPage> {
   void dispose() {
     super.dispose();
     _subscriptions.dispose();
+    print("我的释放");
   }
-  Provide<MineProvide> _setupBody() {
-    return Provide<MineProvide>(
-        builder: (BuildContext context, Widget child, MineProvide value) {
-      return new Column(
-        children: <Widget>[
-          _setupHeader(),
-          new Container(height: 12, color: AppConfig.backgroundColor,),
-          new Column(
-            children: _setupItems(_provide.colors.length),
-          ),
-          _provide.userInfo == null ? new Container(height: 1,):_setupBottom()
-        ],
-      );
-    });
+
+  Widget _setupBody() {
+    print(11111);
+    return new Column(
+      children: <Widget>[
+        _setupHeader(),
+        new Container(height: 12, color: AppConfig.backgroundColor,),
+        new Column(
+          children: _setupItems(_provide.colors.length),
+        ),
+        _provide.userInfo == null ? new Container(height: 1,):_setupBottom()
+      ],
+    );
   }
 
   Provide<MineProvide> _setupHeader() {
     return Provide<MineProvide>(
         builder: (BuildContext context, Widget child, MineProvide value) {
+          print(22222222);
           return new Container(
             height: 260,
             color: AppConfig.primaryColor,
@@ -167,18 +174,22 @@ class _MineContentState extends State<_MineContentPage> {
     );
   }
 
-  Widget _setupBottom() {
-    return new Container(
-      height: 48,
-      width: MediaQuery.of(context).size.width - 30,
-      color: AppConfig.backgroundColor,
-      margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
-      child: new RaisedButton(
-        color: AppConfig.primaryColor,
-        onPressed: _loginOut,
-        child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
-      ),
-    );
+  Provide<MineProvide> _setupBottom() {
+    return Provide<MineProvide>(
+        builder: (BuildContext context, Widget child, MineProvide value) {
+          print(3333);
+          return _provide.userInfo == null ? new Container():new Container(
+            height: 48,
+            width: MediaQuery.of(context).size.width - 30,
+            color: AppConfig.backgroundColor,
+            margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
+            child: new RaisedButton(
+              color: AppConfig.primaryColor,
+              onPressed: _loginOut,
+              child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
+            ),
+          );
+    });
   }
 
   _loginOut() {

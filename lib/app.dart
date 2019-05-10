@@ -62,8 +62,6 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
 
   @override
   void dispose() {
-    controller.dispose();
-    _miniController.dispose();
     super.dispose();
     print("app释放");
   }

@@ -12,7 +12,6 @@ import 'package:flutter_flowermusic/view/mine/collection_page.dart';
 import 'package:flutter_flowermusic/view/mine/login_page.dart';
 import 'package:flutter_flowermusic/view/mine/setting_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MineProvide extends BaseProvide {
