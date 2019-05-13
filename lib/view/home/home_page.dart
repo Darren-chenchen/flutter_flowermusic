@@ -65,6 +65,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     _provide ??= widget.provide;
     _loadData();
     _provide.subjectMore.listen((hasMore) {
+      print("_provide.subjectMore.listen${hasMore}");
       if (hasMore) {
         _refreshController.sendBack(false, RefreshStatus.init);
       } else {
@@ -73,7 +74,6 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
         }
       }
     });
-
     print("首页--initState");
   }
 
@@ -86,7 +86,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: new AppBar(
         title: new Text('推荐歌曲'),
         leading: new IconButton(icon: new Icon(Icons.my_location), onPressed: _pushSaved),

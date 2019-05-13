@@ -49,6 +49,78 @@ new OpacityTapWidget(
 
 ### 3、TapWidget组件：和OpacityTapWidget不一样的是TapWidget点击的效果是背景颜色的变化。
 
+# 部分第三方库的封装与介绍
+
+### 1.dio 网络请求封装: [Dio](https://github.com/flutterchina/dio/blob/master/README-ZH.md)
+
+- Dio初始化
+
+```
+dio = new Dio()
+      ..options = BaseOptions(
+          baseUrl: AppConfig.baseUrl,
+          connectTimeout: 30000,
+          receiveTimeout: 30000)
+      ..interceptors.add(HeaderInterceptor());
+      ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true)); 
+```
+
+- 拦截器
+
+```
+class HeaderInterceptor extends Interceptor {
+  @override
+  onRequest(RequestOptions options) {
+    final token = AppConfig.userTools.getUserToken();
+    if (token != null && token.length > 0) {
+      options.headers.putIfAbsent('Authorization', () => 'Bearer' + ' ' + token);
+    }
+//    if (options.uri.path.indexOf('api/user/advice/Imgs') > 0 || options.uri.path.indexOf('api/user/uploadUserHeader') > 0) { // 上传图片
+//      options.headers.putIfAbsent('Content-Type', () => 'multipart/form-data');
+//      print('上传图片');
+//    } else {
+//    }
+//    options.headers.putIfAbsent('Content-Type', () => 'application/json;charset=UTF-8');
+
+    return super.onRequest(options);
+  }
+}
+```
+
+### 2. [rxdart](https://github.com/ReactiveX/rxdart)
+
+- 属性监听
+
+```
+方式1：
+final subjectMore = new BehaviorSubject<bool>.seeded(false);
+方式2：
+final subjectMore = new BehaviorSubject<bool>();
+
+subjectMore.value = false
+_provide.subjectMore.listen((hasMore) {
+});
+```
+方式1与方式2的不同是，方式1再初始化时就会触发，监听者会在初始化时监听到false参数。
+  
+### 3.flutter_svg 初始化svg格式的图片
+
+```
+new SvgPicture.asset("images/is_single.svg", width: 28, height: 28);
+```
+
+### 4.shared_preferences 数据存储
+
+由于数据的存储和获取是异步的，但是在项目中使用同步的方法获取用户信息就很是有必要，所以该项目再初始化之前就初始化了shared_preferences，解决了在项目中使用同步的方法获取用户信息这个问题。
+
+```
+void main() async {
+  /// 先初始化shared_preferences
+  await AppConfig.init();
+  runApp(MyApp());
+}
+```
+
 # 最后
 
 ### 1、建议大家把重点放在项目架构的优化上面(mvvm)。

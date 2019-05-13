@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/app.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/app_config.dart';
 
 void main() async {
   await AppConfig.init();

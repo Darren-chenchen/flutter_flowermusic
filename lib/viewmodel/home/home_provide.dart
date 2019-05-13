@@ -14,13 +14,13 @@ class HomeProvide extends BaseProvide {
     _page = page;
   }
 
-  final subjectMore = new BehaviorSubject<bool>.seeded(false);
+  final subjectMore = new BehaviorSubject<bool>();
 
   bool _hasMore = false;
   bool get hasMore => _hasMore;
   set hasMore(bool hasMore) {
     _hasMore = hasMore;
-    subjectMore.value = hasMore;
+    subjectMore.add(hasMore);
   }
 
 
