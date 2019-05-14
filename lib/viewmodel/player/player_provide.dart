@@ -34,6 +34,13 @@ class PlayerProvide extends BaseProvide {
     notify();
   }
 
+  double _offsetY = 0.0;
+  double get offsetY => _offsetY;
+  set offsetY(double offsetY) {
+    _offsetY = offsetY;
+    notify();
+  }
+
   Song _currentSong = Song();
   Song get currentSong => _currentSong;
   set currentSong(Song currentSong) {

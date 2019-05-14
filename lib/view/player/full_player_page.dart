@@ -44,6 +44,10 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
   final _rotateTween = new Tween<double>(begin: -0.05, end: 0);
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
 
+  AnimationController ges_controller;
+  CurvedAnimation ges_curve;
+  Animation<double> ges_animation;
+
   final _subscriptions = CompositeSubscription();
 
   @override
@@ -80,12 +84,17 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
         controllerRecord.forward();
       }
     });
+
+    ges_controller = new AnimationController(
+        duration: const Duration(milliseconds: 300), vsync: this);
+    ges_curve = new CurvedAnimation(parent: ges_controller, curve: Curves.linear);
   }
 
   @override
   void dispose() {
     controllerNeedle.dispose();
     controllerRecord.dispose();
+    ges_controller.dispose();
     _subscriptions.dispose();
     super.dispose();
   }
@@ -94,8 +103,57 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
   Widget build(BuildContext context) {
     // TODO: implement build
     return new Scaffold(
-      body: _buildView(),
+      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+      body: _buildGesture(),
     );
+  }
+
+  Provide<PlayerProvide> _buildGesture() {
+    return Provide<PlayerProvide>(
+        builder: (BuildContext context, Widget child, PlayerProvide value) {
+          return new GestureDetector(
+            onVerticalDragUpdate: (offset) {
+              _provide.offsetY += offset.delta.dy;
+            },
+            onVerticalDragEnd: (offset) {
+              if (_provide.offsetY > MediaQuery.of(context).size.height * 0.4) {
+                animationToBottom();
+              } else {
+                this.animationToTop();
+              }
+            },
+            child: new Transform.translate(
+              offset: Offset(0, (_provide.offsetY >= 0.0 ? _provide.offsetY:0.0)),
+              child: _buildView(),
+            ),
+          );
+        }
+    );
+  }
+
+  animationToTop() {
+    ges_animation = Tween(begin: _provide.offsetY, end: 0.0).animate(ges_curve)
+      ..addListener(() {
+        _provide.offsetY = ges_animation.value;
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+        }
+      });
+    ges_controller.forward(from: 0);
+  }
+
+  animationToBottom() {
+    ges_animation = Tween(begin: _provide.offsetY, end: MediaQuery.of(context).size.height).animate(ges_curve)
+      ..addListener(() {
+        _provide.offsetY = ges_animation.value;
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Navigator.of(context).pop();
+        }
+      });
+    ges_controller.forward(from: 0);
   }
 
   Provide<PlayerProvide> _buildView() {
