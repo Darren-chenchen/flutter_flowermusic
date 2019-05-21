@@ -1,14 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/base.dart';
-import 'package:flutter_flowermusic/data/user.dart';
 import 'package:flutter_flowermusic/model/mine_respository.dart';
-import 'package:flutter_flowermusic/tools/user_tool.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginProvide extends BaseProvide {
-
-  List placeHoderText = ['请输入用户名(至少3位)', '请输入您的邮箱(可选)', '6-12位数字与字母的组合'];
+  List placeHolderText = ['Username', 'Email', 'Password'];
+  List placeHolderIcon = [Icons.person_outline, Icons.alternate_email, Icons.lock_outline];
   List titles = ['用户名', '邮箱', '密码'];
 
   String _userName = '';
@@ -69,43 +67,22 @@ class LoginProvide extends BaseProvide {
     notifyListeners();
   }
 
-
   final MineRepo _repo = MineRepo();
+
   /// 登录
   Observable login() {
-    var body = {
-      'userName': this.userName,
-      'email': this.email,
-      'passWord': this.password
-    };
-    return _repo
-        .login(body)
-        .doOnData((result) {
-    })
-        .doOnError((e, stacktrace) {
-    })
-        .doOnListen(() {
-    })
-        .doOnDone(() {
-    });
+    var body = {'userName': this.userName, 'email': this.email, 'passWord': this.password};
+    return _repo.login(body).doOnData((result) {}).doOnError((e, stacktrace) {}).doOnListen(() {}).doOnDone(() {});
   }
 
   // 重置密码
   Observable resetPassword() {
-    var body = {
-      'userName': this.userName,
-      'email': this.email,
-      'passWord': this.password
-    };
+    var body = {'userName': this.userName, 'email': this.email, 'passWord': this.password};
     return _repo
         .resetPassword(body)
-        .doOnData((result) {
-    })
-        .doOnError((e, stacktrace) {
-    })
-        .doOnListen(() {
-    })
-        .doOnDone(() {
-    });
+        .doOnData((result) {})
+        .doOnError((e, stacktrace) {})
+        .doOnListen(() {})
+        .doOnDone(() {});
   }
 }

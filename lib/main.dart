@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, // 去除debug旗标
       theme: new ThemeData(
           primaryColor: new Color.fromRGBO(255, 255, 255, 1),
-          highlightColor: AppConfig.backgroundColor,
+          highlightColor: Colors.grey.withOpacity(0.3), // change highlightColor for floatingAppBar
           splashColor: AppConfig.backgroundColor,
           hintColor: Colors.grey,
           scaffoldBackgroundColor: new Color.fromRGBO(255, 255, 255, 1), //设置页面背景颜色

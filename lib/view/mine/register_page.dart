@@ -1,41 +1,42 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
 import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
-import 'package:flutter_flowermusic/view/mine/register_page.dart';
-import 'package:flutter_flowermusic/view/mine/reset_password_page.dart';
+import 'package:flutter_flowermusic/view/mine/register_protocol_page.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/login_provide.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 import 'package:rxdart/rxdart.dart';
 
-class LoginPage extends PageProvideNode {
+class RegisterPage extends PageProvideNode {
   LoginProvide provide = LoginProvide();
 
-  LoginPage() {
+  RegisterPage() {
     mProviders.provide(Provider<LoginProvide>.value(provide));
   }
 
   @override
   Widget buildContent(BuildContext context) {
-    return _LoginContentPage(provide);
+    return _RegisterContentPage(provide);
   }
 }
 
-class _LoginContentPage extends StatefulWidget {
+class _RegisterContentPage extends StatefulWidget {
   LoginProvide provide;
 
-  _LoginContentPage(this.provide);
+  _RegisterContentPage(this.provide);
 
   @override
   State<StatefulWidget> createState() {
-    return _LoginContentState();
+    return _RegisterContentState();
   }
 }
 
-class _LoginContentState extends State<_LoginContentPage> {
+class _RegisterContentState extends State<_RegisterContentPage> {
   LoginProvide _provide;
   final _subscriptions = CompositeSubscription();
 
@@ -51,12 +52,15 @@ class _LoginContentState extends State<_LoginContentPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.lightBlueAccent,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(239, 245, 255, 1),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              _setupBack(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 90),
+              ),
               _setupTop(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 57),
@@ -66,6 +70,16 @@ class _LoginContentState extends State<_LoginContentPage> {
             ],
           ),
         ),
+        floatingActionButtonLocation: _MiniStartBottomFloatingActionButtonLocation(),
+        floatingActionButton: FloatingActionButton(
+            heroTag: 'login',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            )),
       ),
     );
   }
@@ -75,24 +89,6 @@ class _LoginContentState extends State<_LoginContentPage> {
     super.dispose();
     print("login释放");
     _subscriptions.dispose();
-  }
-
-  Widget _setupBack() {
-    return new Container(
-      height: 160,
-      padding: EdgeInsets.fromLTRB(6, 0, 0, 0),
-      alignment: Alignment.centerLeft,
-      child: new GestureDetector(
-        onTap: () {
-          this._goback(false);
-        },
-        child: new Icon(
-          Icons.keyboard_arrow_left,
-          color: Colors.black,
-          size: 40,
-        ),
-      ),
-    );
   }
 
   Widget _setupTop() {
@@ -111,7 +107,7 @@ class _LoginContentState extends State<_LoginContentPage> {
     return Stack(
       children: [
         Provide<LoginProvide>(
-          builder: (BuildContext context, Widget child, LoginProvide provide) {
+          builder: (BuildContext context, Widget child, LoginProvide value) {
             return Hero(
               tag: 'frame',
               child: ClipPath(
@@ -134,35 +130,19 @@ class _LoginContentState extends State<_LoginContentPage> {
           height: 331,
           width: 302,
           child: Padding(
-            padding: const EdgeInsets.only(top: 120.0, left: 20, right: 20),
+            padding: const EdgeInsets.only(top: 108.0, left: 20, right: 20),
             child: Column(
               children: <Widget>[
-                _setupItem(0),
+                _setupItem(0, 'name'),
+                _setupItem(1, 'email'),
+                _setupItem(2, 'pwd'),
                 Hero(
-                  tag: 'email',
+                  tag: 'forget',
                   child: Divider(
-                    height: 0,
+                    height: 12,
                     color: Colors.transparent,
                   ),
                 ),
-                _setupItem(1),
-                Hero(
-                  tag: 'forget',
-                  child: Align(
-                      heightFactor: 2,
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                          onTap: () {
-                            this._resetPwd();
-                          },
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Text(
-                              "Forget Password",
-                              style: TextStyle(color: Color(0xFF7B7B7B)),
-                            ),
-                          ))),
-                )
               ],
             ),
           ),
@@ -189,18 +169,15 @@ class _LoginContentState extends State<_LoginContentPage> {
           child: Transform.translate(
             offset: Offset(0, 24),
             child: Hero(
-              tag: 'login',
+              tag: 'sign',
               child: CupertinoButton(
                 pressedOpacity: 0.8,
                 padding: EdgeInsets.all(0),
                 borderRadius: BorderRadius.all(Radius.circular(34)),
                 color: const Color(0xFF6DA2FF),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                child: Text(
+                  'Sign up',
+                  style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
                   _login();
@@ -213,13 +190,13 @@ class _LoginContentState extends State<_LoginContentPage> {
     );
   }
 
-  _setupItem(int index) {
+  _setupItem(int index, String tag) {
     return Hero(
-      tag: index == 0 ? 'name' : 'pwd',
+      tag: tag,
       child: CupertinoTextField(
-          obscureText: index == 2,
+          obscureText: (index == 2 && _provide.passwordVisiable == false) ? true : false,
           prefix: Icon(
-            index == 0 ? Icons.person_outline : Icons.lock_outline,
+            _provide.placeHolderIcon[index],
             color: const Color(0xFFBED5FF),
             size: 24.0,
           ),
@@ -231,36 +208,55 @@ class _LoginContentState extends State<_LoginContentPage> {
             border: Border(bottom: BorderSide(width: 1.0, color: const Color(0xFFBED5FF))),
           ),
           placeholderStyle: TextStyle(color: const Color(0xFFBED5FF)),
-          placeholder: index == 0 ? 'Username' : 'Password',
+          placeholder: _provide.placeHolderText[index],
           onChanged: (str) {
             if (index == 0) {
               _provide.userName = str;
             }
             if (index == 1) {
+              _provide.email = str;
+            }
+            if (index == 2) {
               _provide.password = str;
             }
           }),
     );
   }
 
-  _setupBottom() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 70.0),
-      child: Hero(
-        tag: 'sign',
-        child: CupertinoButton(
-          pressedOpacity: 0.8,
-          padding: EdgeInsets.all(0),
-          child: Text(
-            'Sign up',
-            style: TextStyle(color: Color(0xFF6DA2FF)),
-          ),
-          onPressed: () {
-            Navigator.push(context, HeroPageRoute(builder: (_) => RegisterPage(), fullscreenDialog: true));
-          },
-        ),
-      ),
-    );
+  Provide<LoginProvide> _setupBottom() {
+    return Provide<LoginProvide>(builder: (BuildContext context, Widget child, LoginProvide value) {
+      return Hero(
+        tag: 'bottom',
+        child: Container(
+            padding: EdgeInsets.only(top: 70),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: _agree,
+                  child: value.agreeProtocol
+                      ? Icon(
+                          Icons.check_circle,
+                          color: AppConfig.primaryColor,
+                        )
+                      : Icon(
+                          Icons.check_circle_outline,
+                          color: AppConfig.grayTextColor,
+                        ),
+                ),
+                GestureDetector(
+                  onTap: _agree,
+                  child: Text('已认真阅读并同意', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                ),
+                GestureDetector(
+                  onTap: _gotoRegiestProticol,
+                  child: Text('《注册协议》', style: TextStyle(fontSize: 14, color: AppConfig.primaryColor)),
+                )
+              ],
+            )),
+      );
+    });
   }
 
   _login() {
@@ -295,8 +291,12 @@ class _LoginContentState extends State<_LoginContentPage> {
     _subscriptions.add(s);
   }
 
-  _resetPwd() {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => ResetPasswordPage())).then((value) {});
+  _agree() {
+    _provide.agreeProtocol = !_provide.agreeProtocol;
+  }
+
+  _gotoRegiestProticol() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => RegiestProtocolPage())).then((value) {});
   }
 
   _goback(bool logined) {
@@ -325,77 +325,34 @@ class _CustomClipper extends CustomClipper<Path> {
   }
 }
 
-class HeroPageRoute<T> extends PageRoute<T> {
-  /// Construct a MaterialPageRoute whose contents are defined by [builder].
-  ///
-  /// The values of [builder], [maintainState], and [fullScreenDialog] must not
-  /// be null.
-  HeroPageRoute({
-    @required this.builder,
-    RouteSettings settings,
-    this.maintainState = true,
-    bool fullscreenDialog = false,
-  })  : assert(builder != null),
-        assert(maintainState != null),
-        assert(fullscreenDialog != null),
-        assert(opaque),
-        super(settings: settings, fullscreenDialog: fullscreenDialog);
-
-  /// Builds the primary contents of the route.
-  final WidgetBuilder builder;
+class _MiniStartBottomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  const _MiniStartBottomFloatingActionButtonLocation();
 
   @override
-  final bool maintainState;
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // We have to offset the FAB by four pixels because the FAB itself _adds_
+    // four pixels in every direction in order to have a hit target area of 48
+    // pixels in each dimension, despite being a circle of radius 40.
+    return Offset(45, scaffoldGeometry.scaffoldSize.height - 150);
+  }
 
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 800);
+  double getDockedY(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    final double contentBottom = scaffoldGeometry.contentBottom;
+    final double bottomSheetHeight = scaffoldGeometry.bottomSheetSize.height;
+    final double fabHeight = scaffoldGeometry.floatingActionButtonSize.height;
+    final double snackBarHeight = scaffoldGeometry.snackBarSize.height;
 
-  @override
-  Color get barrierColor => null;
+    double fabY = contentBottom - fabHeight / 2.0;
+    // The FAB should sit with a margin between it and the snack bar.
+    if (snackBarHeight > 0.0)
+      fabY = math.min(fabY, contentBottom - snackBarHeight - fabHeight - kFloatingActionButtonMargin);
+    // The FAB should sit with its center in front of the top of the bottom sheet.
+    if (bottomSheetHeight > 0.0) fabY = math.min(fabY, contentBottom - bottomSheetHeight - fabHeight / 2.0);
 
-  @override
-  String get barrierLabel => null;
-
-  @override
-  bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
-    return previousRoute is MaterialPageRoute || previousRoute is CupertinoPageRoute;
+    final double maxFabY = scaffoldGeometry.scaffoldSize.height - fabHeight;
+    return math.min(maxFabY, fabY);
   }
 
   @override
-  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
-    // Don't perform outgoing animation if the next route is a fullscreen dialog.
-    return (nextRoute is MaterialPageRoute && !nextRoute.fullscreenDialog) ||
-        (nextRoute is CupertinoPageRoute && !nextRoute.fullscreenDialog);
-  }
-
-  @override
-  Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    final Widget result = builder(context);
-    assert(() {
-      if (result == null) {
-        throw FlutterError('The builder for route "${settings.name}" returned null.\n'
-            'Route builders must never return null.');
-      }
-      return true;
-    }());
-    return Semantics(
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: result,
-    );
-  }
-
-  @override
-  Widget buildTransitions(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-    final PageTransitionsTheme theme = Theme.of(context).pageTransitionsTheme;
-    return theme.buildTransitions<T>(this, context, animation, secondaryAnimation, child);
-  }
-
-  @override
-  String get debugLabel => '${super.debugLabel}(${settings.name})';
+  String toString() => 'FloatingActionButtonLocation.miniStartBottom';
 }
