@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_flowermusic/tools/user_tool.dart';
 
 class AppConfig {
-
   static const baseUrl = 'http://chenliang.yishouhaoge.cn/';
 
   static const primaryColor = Color(0xFF5DBE82); //主题色
@@ -24,24 +23,20 @@ class AppConfig {
 
   static Widget getPlaceHoder([width, height]) {
     return new Container(
-      width: width,
-      height: height,
-      child: new Image.asset('images/placehoder_img.png',fit: BoxFit.cover,));
+        width: width,
+        height: height,
+        child: new Image.asset(
+          'images/placehoder_img.png',
+          fit: BoxFit.cover,
+        ));
   }
 
   static Widget getUserPlaceHoder(width, height) {
-    return new Container(
-        width: width,
-        height: height,
-        child: new Image.asset('images/nologin.png'));
+    return new Container(width: width, height: height, child: new Image.asset('images/nologin.png'));
   }
 
   static Widget getLoadingPlaceHoder(width, height) {
-    return new SizedBox(
-        width: width,
-        height: height,
-        child: const CircularProgressIndicator(strokeWidth: 2.0)
-    );
+    return new SizedBox(width: width, height: height, child: const CircularProgressIndicator(strokeWidth: 2.0));
   }
 
   //debug:false  release: true
@@ -49,11 +44,9 @@ class AppConfig {
 
   static Widget initLoading(bool showEmpty, [String emptyText = '暂无数据']) {
     return new Center(
-      child: showEmpty ? _initEmpty(emptyText) : SizedBox(
-          width: 35.0,
-          height: 35.0,
-          child: const CircularProgressIndicator(strokeWidth: 2.0)
-      ),
+      child: showEmpty
+          ? _initEmpty(emptyText)
+          : SizedBox(width: 35.0, height: 35.0, child: const CircularProgressIndicator(strokeWidth: 2.0)),
     );
   }
 
@@ -62,8 +55,14 @@ class AppConfig {
       padding: EdgeInsets.fromLTRB(0, 80, 0, 0),
       child: new Column(
         children: <Widget>[
-          new Icon(Icons.hourglass_empty, color: Colors.grey,size: 60,),
-          new Container(height: 10,),
+          new Icon(
+            Icons.hourglass_empty,
+            color: Colors.grey,
+            size: 60,
+          ),
+          new Container(
+            height: 10,
+          ),
           new Text(emptyText)
         ],
       ),
