@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/app.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 void main() async {
   await AppConfig.init();
+  FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-7554307620787158~7792716260');
   runApp(MyApp());
 }
 

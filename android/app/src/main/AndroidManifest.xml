@@ -20,6 +20,12 @@
         android:name=".App"
         android:label="flutter_flowermusic"
         android:icon="@mipmap/ic_launcher">
+
+        <!--value=YOUR_ADMOB_APP_ID-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7554307620787158~7792716260"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

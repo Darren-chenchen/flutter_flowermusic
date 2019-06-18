@@ -28,6 +28,7 @@
 ### 1、使用mvvm架构编写。  [MVVM架构在Flutter中的简单实践](https://www.jianshu.com/p/43eb17163468)
 ### 2、Provide和RxDart 的使用，详细请参考 [Flutter | 状态管理特别篇 —— Provide](https://juejin.im/post/5c6d4b52f265da2dc675b407)
 
+
 # 部分封装介绍
 
 ### 1、refresh组件：刷新组件是在pull_to_refresh的基础上进行的再次封装，该库本身是存在一些问题的，所以就自己改了一下使用。希望该库持续更新，还有其他的刷新库，这里就不详细说了。主要是我们在使用时最好能够读懂别人的组件库的代码，这样才能更好的解决问题。也是一种学习方式。[pull__to__refresh](https://github.com/peng8350/flutter_pulltorefresh)
