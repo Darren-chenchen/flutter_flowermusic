@@ -4,7 +4,6 @@ import 'package:flutter_flowermusic/base/app_config.dart';
 import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/data/song.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
-import 'package:flutter_flowermusic/main_provide.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/view/home/comment_page.dart';
@@ -14,9 +13,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:provide/provide.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_admob/firebase_admob.dart';
-
-const String testDevice = 'c02d7e1bffc1bc21f5daa60aa40c637ab4cb1a17';
 
 class HomePage extends PageProvideNode {
 
@@ -58,35 +54,10 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
 
   HomeProvide _provide;
 
-  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-    testDevices: testDevice != null ? <String>[testDevice] : null,
-    keywords: <String>['foo', 'bar'],
-    contentUrl: 'http://foo.com/bar.html',
-    childDirected: true,
-    nonPersonalizedAds: true,
-  );
-
-  BannerAd _bannerAd;
-
-  BannerAd createBannerAd() {
-    return BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.banner,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("BannerAd event $event");
-      },
-    );
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _bannerAd = createBannerAd()..load();
-    _bannerAd
-      ..show();
 
     _refreshController = new RefreshController();
     _scrollControll = new ScrollController();
