@@ -1,4 +1,5 @@
 import 'package:flutter_flowermusic/base/app_config.dart';
+import 'package:flutter_flowermusic/base/base2.dart';
 import 'package:flutter_flowermusic/data/song.dart';
 import 'package:flutter_flowermusic/model/home_repository.dart';
 import 'package:flutter_flowermusic/base/base.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
 
-class HomeProvide extends BaseProvide {
+class HomeProvide extends BaseProvide2 {
   // 页数
   int _page = 0;
   int get page => _page;

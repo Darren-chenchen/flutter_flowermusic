@@ -8,16 +8,18 @@ import 'package:flutter_flowermusic/data/user.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/model/mine_respository.dart';
 import 'package:flutter_flowermusic/view/mine/advice_page.dart';
+import 'package:flutter_flowermusic/view/mine/author_page.dart';
 import 'package:flutter_flowermusic/view/mine/collection_page.dart';
 import 'package:flutter_flowermusic/view/mine/login_page.dart';
 import 'package:flutter_flowermusic/view/mine/setting_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MineProvide extends BaseProvide {
-  List content = ['我的收藏', '五星好评', '意见反馈', '设置'];
-  List icons = [Icons.favorite_border, Icons.star_border, Icons.email, Icons.settings];
-  List colors = [Color(0xFF007aff), Color(0xFFFF7F00), Color(0xFFEEAD0E), Color(0xFFC0FF3E)];
+  List content = ['我的收藏', '五星好评', '意见反馈', '设置', '关于作者'];
+  List icons = [Icons.favorite_border, Icons.star_border, Icons.email, Icons.settings, Icons.account_box];
+  List colors = [Color(0xFF007aff), Color(0xFFFF7F00), Color(0xFFEEAD0E), Color(0xFFC0FF3E), Color(0xFFAEFDC0)];
 
   User _userInfo;
   User get userInfo => _userInfo;
@@ -88,6 +90,18 @@ class MineProvide extends BaseProvide {
     if (index == 3) {
       Navigator.push(context, MaterialPageRoute(
           builder: (_) => SettingPage()));
+    }
+    if (index == 4) {
+      _launchURL();
+    }
+  }
+
+  _launchURL() async {
+    const url = 'http://www.darrenblog.cn';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 

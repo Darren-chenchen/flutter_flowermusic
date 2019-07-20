@@ -26,6 +26,7 @@ class BaseProvide with ChangeNotifier {
   }
 }
 
+
 /// page的基类 [PageProvideNode]
 ///
 /// 隐藏了 [ProviderNode] 的调用
@@ -43,6 +44,7 @@ abstract class PageProvideNode extends StatelessWidget {
     );
   }
 }
+
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
 

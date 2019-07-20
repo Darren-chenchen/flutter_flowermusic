@@ -162,20 +162,20 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     return Provide<HomeProvide>(
         builder: (BuildContext context, Widget child, HomeProvide value) {
           return new SmartRefresher(
-              child: new ListView.builder(
-                  itemCount: value.dataArr.length,
-                  controller: _scrollControll,
-                  itemBuilder: (context, i) {
-                    if (value.dataArr.length > 0) {
-                      return getRow(value.dataArr[i], i);
-                    }
-                  }),
-              controller:_refreshController,
-              enablePullDown: true,
-              enablePullUp: true,
-              onHeaderRefresh: _onHeaderRefresh,
-              onFooterRefresh: _onFooterRefresh,
-              onOffsetChange: _onOffsetCallback,
+            child: new ListView.builder(
+                itemCount: value.dataArr.length,
+                controller: _scrollControll,
+                itemBuilder: (context, i) {
+                  if (value.dataArr.length > 0) {
+                    return getRow(value.dataArr[i], i);
+                  }
+                }),
+            controller:_refreshController,
+            enablePullDown: true,
+            enablePullUp: true,
+            onHeaderRefresh: _onHeaderRefresh,
+            onFooterRefresh: _onFooterRefresh,
+            onOffsetChange: _onOffsetCallback,
           );
         }
     );
