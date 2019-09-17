@@ -87,7 +87,10 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
         new Column(
           children: _setupItems(_provide.colors.length),
         ),
-        _provide.userInfo == null ? new Container(height: 1,):_setupBottom()
+        Consumer<MineProvide>(builder: (build, provide, _) {
+          return _provide.userInfo == null ?  new Container(height: 1,) : _setupBottom();
+        },)
+
       ],
     );
   }
@@ -104,28 +107,35 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
             onTap: () {
               _clickIcon();
             },
-            child: new ClipOval(
-                child: new CachedNetworkImage(
-                  width: 90,
-                  height: 90,
-                  key: Key(Provider.of<MineProvide>(context).userInfo == null ? '':Provider.of<MineProvide>(context).userInfo.userId),
-                  imageUrl: Provider.of<MineProvide>(context).userInfo == null ? '':Provider.of<MineProvide>(context).userInfo.userPic ?? '',
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
-                  errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
-                )
-            ),
+            child: Consumer<MineProvide>(builder: (build, provide, _) {
+              return new ClipOval(
+                  child: new CachedNetworkImage(
+                    width: 90,
+                    height: 90,
+                    key: Key(_provide.userInfo == null ? '':_provide.userInfo.userId),
+                    imageUrl: _provide.userInfo == null ? '':_provide.userInfo.userPic ?? '',
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
+                    errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
+                  )
+              );
+            }),
           ),
 
           new Container(width: 8,),
           new Expanded(
-            child: new GestureDetector(
-              onTap: _gotoLogin,
-              child: new Text(Provider.of<MineProvide>(context).userInfo == null ? '您还没有登录':Provider.of<MineProvide>(context).userInfo.userName ?? '',
-                style: TextStyle(color: Colors.white,fontSize: 18),),
-            ),
+            child: Consumer<MineProvide>(builder: (build, provide, _) {
+              return new GestureDetector(
+                onTap: _gotoLogin,
+                child: new Text(_provide.userInfo == null ? '您还没有登录':_provide.userInfo.userName ?? '',
+                  style: TextStyle(color: Colors.white,fontSize: 18),),
+              );
+            }),
           ),
-          Provider.of<MineProvide>(context).userInfo == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,)
+          Consumer<MineProvide>(builder: (build, provide, _) {
+            return _provide.userInfo == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,);
+          })
+
         ],
       ),
     );
@@ -175,17 +185,19 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
   }
 
   Widget _setupBottom() {
-    return Provider.of<MineProvide>(context).userInfo == null ? new Container():new Container(
-      height: 48,
-      width: MediaQuery.of(context).size.width - 30,
-      color: AppConfig.backgroundColor,
-      margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
-      child: new RaisedButton(
-        color: AppConfig.primaryColor,
-        onPressed: _loginOut,
-        child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
-      ),
-    );
+    return Consumer<MineProvide>(builder: (build, provide, _) {
+      return _provide.userInfo == null ? new Container():new Container(
+        height: 48,
+        width: MediaQuery.of(context).size.width - 30,
+        color: AppConfig.backgroundColor,
+        margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
+        child: new RaisedButton(
+          color: AppConfig.primaryColor,
+          onPressed: _loginOut,
+          child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
+        ),
+      );
+    },);
   }
 
   _loginOut() {

@@ -101,8 +101,10 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
   }
 
   Widget _initView() {
-    return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
-        .initLoading(false);
+    return Consumer<OldProvide>(builder: (build, provide, _) {
+      return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
+          .initLoading(false);
+    },);
   }
 
   _loadData([bool isRefresh = true]) {
@@ -215,7 +217,9 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
                   onTap: () {
                     _clicFav(song);
                   },
-                  child: new Icon(Provider.of<OldProvide>(context).dataArr[index].isFav ? Icons.favorite:Icons.favorite_border, size: 22, color: Provider.of<OldProvide>(context).dataArr[index].isFav ? Colors.red:Colors.black87,),
+                  child: Consumer<OldProvide>(builder: (build, provide, _) {
+                    return new Icon(_provide.dataArr[index].isFav ? Icons.favorite:Icons.favorite_border, size: 22, color: _provide.dataArr[index].isFav ? Colors.red:Colors.black87,);
+                  }),
                 )
               ],),
             )
