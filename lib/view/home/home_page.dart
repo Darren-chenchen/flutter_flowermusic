@@ -48,6 +48,8 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
 
   final _loading = LoadingDialog();
 
+  final _cellHeight = 80.0;
+
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
@@ -185,7 +187,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     return new Column(
       children: <Widget>[
         new Container(
-          height: 70,
+          height: _cellHeight,
           padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
           child: new InkWell(
             onTap: () {

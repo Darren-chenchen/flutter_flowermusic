@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flowermusic/tools/app_tool.dart';
 import 'package:flutter_flowermusic/tools/user_tool.dart';
 
 class AppConfig {
@@ -71,8 +72,10 @@ class AppConfig {
   }
 
   static UserTools userTools;
+  static AppTools appTools;
 
   static init() async {
     userTools = await UserTools.getInstance();
+    appTools = await AppTools.getInstance();
   }
 }
