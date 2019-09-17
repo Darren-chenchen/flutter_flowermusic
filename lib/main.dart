@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/app.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
+  Provider.debugCheckInvalidValueType = null;
   await AppConfig.init();
   runApp(MyApp());
 }

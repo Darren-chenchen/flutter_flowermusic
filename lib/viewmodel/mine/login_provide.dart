@@ -15,21 +15,21 @@ class LoginProvide extends BaseProvide {
   String get userName => _userName;
   set userName(String userName) {
     _userName = userName;
-    _loginBtnCanClick();
+    loginBtnCanClick();
   }
 
   String _password = '';
   String get password => _password;
   set password(String password) {
     _password = password;
-    _loginBtnCanClick();
+    loginBtnCanClick();
   }
 
   String _email = '';
   String get email => _email;
   set email(String email) {
     _email = email;
-    _loginBtnCanClick();
+    loginBtnCanClick();
   }
 
   /// 按钮是否可以点击
@@ -37,20 +37,22 @@ class LoginProvide extends BaseProvide {
   bool get loginEnable => _loginEnable;
   set loginEnable(bool loginEnable) {
     _loginEnable = loginEnable;
+    notify();
   }
 
   /// 判断按钮是否可以点击
-  _loginBtnCanClick() {
+  loginBtnCanClick() {
     bool emailValue = true;
     if (this.email.length > 0) {
-      emailValue = CommonUtil.isEmail(email);
+      emailValue = CommonUtil.isEmail(this.email);
     }
-    if (userName.length >= 3 && CommonUtil.isPassword(password) && emailValue) {
+    if (this.userName.length >= 3 && CommonUtil.isPassword(this.password) && emailValue) {
       this.loginEnable = true;
     } else {
       this.loginEnable = false;
     }
-    notifyListeners();
+    print('44444${this.loginEnable}');
+//    notifyListeners();
   }
 
   /// 密码是否是可见的
@@ -58,7 +60,7 @@ class LoginProvide extends BaseProvide {
   bool get passwordVisiable => _passwordVisiable;
   set passwordVisiable(bool passwordVisiable) {
     _passwordVisiable = passwordVisiable;
-    notifyListeners();
+    notify();
   }
 
   /// 是否同意注册协议
@@ -66,6 +68,10 @@ class LoginProvide extends BaseProvide {
   bool get agreeProtocol => _agreeProtocol;
   set agreeProtocol(bool agreeProtocol) {
     _agreeProtocol = agreeProtocol;
+    notify();
+  }
+
+  notify() {
     notifyListeners();
   }
 

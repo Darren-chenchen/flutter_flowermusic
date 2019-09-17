@@ -27,6 +27,7 @@ class AdviceProvide extends BaseProvide {
   List<String> get imgArr => _imgArr;
   set imgArr(List<String> arr) {
     _imgArr = arr;
+    print(_imgArr);
     notify();
   }
 
@@ -67,8 +68,7 @@ class AdviceProvide extends BaseProvide {
             this.imgArr.clear();
             var arr = result.data as List;
             this.imgArr.addAll(arr.map((map) => AppConfig.baseUrl + map['imageUrl']));
-            notify();
-            print(this.imgArr);
+            this.imgArr = this.imgArr;
           }
     })
         .doOnError((e, stacktrace) {
