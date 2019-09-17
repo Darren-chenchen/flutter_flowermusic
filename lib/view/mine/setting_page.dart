@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/setting_provide.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class SettingPage extends PageProvideNode {
+class SettingPage extends StatelessWidget {
 
-  SettingProvide provide = SettingProvide();
-
-  SettingPage() {
-    mProviders.provide(Provider<SettingProvide>.value(provide));
-  }
+  final provide = SettingProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _SettingContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _SettingContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -67,15 +71,12 @@ class _SettingContentState extends State<_SettingContentPage> {
   }
 
 
-  Provide<SettingProvide> _initView() {
-    return Provide<SettingProvide>(
-        builder: (BuildContext context, Widget child, SettingProvide value) {
-          return new Column(
-            children: <Widget>[
-              _initTimer()
-            ],
-          );
-        });
+  Widget _initView() {
+    return new Column(
+      children: <Widget>[
+        _initTimer()
+      ],
+    );
   }
 
   Widget _initTimer() {
@@ -88,7 +89,7 @@ class _SettingContentState extends State<_SettingContentPage> {
             children: <Widget>[
               new Text('定时关闭', style: TextStyle(fontSize: 16),),
               new Switch(
-                  value: _provide.openTimer,
+                  value: Provider.of<SettingProvide>(context).openTimer,
                   onChanged: (value) {
                     _provide.openTimer = value;
                   })

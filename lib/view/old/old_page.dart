@@ -11,19 +11,25 @@ import 'package:flutter_flowermusic/view/old/olddetail_page.dart';
 import 'package:flutter_flowermusic/viewmodel/old/old_provide.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class OldPage extends PageProvideNode {
-  OldProvide provide = OldProvide();
+class OldPage extends StatelessWidget {
 
-  OldPage() {
-    mProviders.provide(Provider<OldProvide>.value(provide));
-  }
+  final provide = OldProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _OldContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _OldContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -94,12 +100,9 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
     );
   }
 
-  Provide<OldProvide> _initView() {
-    return Provide<OldProvide>(
-        builder: (BuildContext context, Widget child, OldProvide value) {
-          return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
-              .initLoading(false);
-        });
+  Widget _initView() {
+    return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
+        .initLoading(false);
   }
 
   _loadData([bool isRefresh = true]) {
@@ -125,27 +128,25 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
   _onOffsetCallback(bool up, double offset) {
 
   }
-  Provide<OldProvide> _buildListView() {
-    return Provide<OldProvide>(
-        builder: (BuildContext context, Widget child, OldProvide value) {
-          return new SmartRefresher(
-            child: new ListView.builder(
-                itemCount: value.dataArr.length,
-                itemBuilder: (context, i) {
-                  if (value.dataArr.length > 0) {
-                    return getRow(value.dataArr[i], i);
-                  }
-                }),
-            controller:_refreshController,
-            enablePullDown: true,
-            enablePullUp: true,
-            onHeaderRefresh: _onHeaderRefresh,
-            onFooterRefresh: _onFooterRefresh,
-            onOffsetChange: _onOffsetCallback,
-          );
-        }
+
+  Widget _buildListView() {
+    return new SmartRefresher(
+      child: new ListView.builder(
+          itemCount: _provide.dataArr.length,
+          itemBuilder: (context, i) {
+            if (_provide.dataArr.length > 0) {
+              return getRow(_provide.dataArr[i], i);
+            }
+          }),
+      controller:_refreshController,
+      enablePullDown: true,
+      enablePullUp: true,
+      onHeaderRefresh: _onHeaderRefresh,
+      onFooterRefresh: _onFooterRefresh,
+      onOffsetChange: _onOffsetCallback,
     );
   }
+
 
   Widget getRow(Song song, int index) {
     return new Container(
@@ -214,7 +215,7 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
                   onTap: () {
                     _clicFav(song);
                   },
-                  child: new Icon(song.isFav ? Icons.favorite:Icons.favorite_border, size: 22, color: song.isFav ? Colors.red:Colors.black87,),
+                  child: new Icon(Provider.of<OldProvide>(context).dataArr[index].isFav ? Icons.favorite:Icons.favorite_border, size: 22, color: Provider.of<OldProvide>(context).dataArr[index].isFav ? Colors.red:Colors.black87,),
                 )
               ],),
             )

@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/advice_provide.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AdvicePage extends PageProvideNode {
+class AdvicePage extends StatelessWidget {
 
-  AdviceProvide provide = AdviceProvide();
-
-  AdvicePage() {
-    mProviders.provide(Provider<AdviceProvide>.value(provide));
-  }
+  final provide = AdviceProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _AdviceContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _AdviceContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -59,20 +62,17 @@ class _AdviceContentState extends State<_AdviceContentPage> {
     );
   }
 
-  Provide<AdviceProvide> _initView() {
-    return Provide<AdviceProvide>(
-        builder: (BuildContext context, Widget child, AdviceProvide value) {
-          return new SingleChildScrollView(
-            child: new Column(
-              children: <Widget>[
-                _setupAdviceContent(),
-                _setupImages(),
-                _setupPhone(),
-                _setupBottom()
-              ],
-            ),
-          );
-        });
+  Widget _initView() {
+    return new SingleChildScrollView(
+      child: new Column(
+        children: <Widget>[
+          _setupAdviceContent(),
+          _setupImages(),
+          _setupPhone(),
+          _setupBottom()
+        ],
+      ),
+    );
   }
 
   Widget _setupAdviceContent() {
@@ -109,6 +109,7 @@ class _AdviceContentState extends State<_AdviceContentPage> {
   }
 
   Widget _setupImages() {
+    print('_setupImages_setupImages${Provider.of<AdviceProvide>(context).imgArr}----${_provide.imgArr}');
     return new Column(
       children: <Widget>[
         new Container(
@@ -122,7 +123,7 @@ class _AdviceContentState extends State<_AdviceContentPage> {
           height: 30,
           alignment: Alignment.centerRight,
           color: Colors.white,
-          child: new Text('${_provide.imgArr.length}/3',style: TextStyle(fontSize: 12),),
+          child: new Text('${Provider.of<AdviceProvide>(context).imgArr.length}/3',style: TextStyle(fontSize: 12),),
         ),
         new Container(
           height: 80,
@@ -146,42 +147,36 @@ class _AdviceContentState extends State<_AdviceContentPage> {
     );
   }
 
-  List<Provide<AdviceProvide>> _setupItems() {
-    return new List<Provide<AdviceProvide>>.generate(
-        _provide.imgArr.length,
+  List<GestureDetector> _setupItems() {
+    return List<GestureDetector>.generate(Provider.of<AdviceProvide>(context).imgArr.length,
             (int index) =>
             _setupItem(index)
     );
   }
 
-  Provide<AdviceProvide> _setupItem(int index) {
-    return Provide<AdviceProvide>(
-        builder: (BuildContext context, Widget child, AdviceProvide value)
-    {
-      return new GestureDetector(
-        onTap: () {
-
-        },
-        child: new Container(
-          width: 70,
-          height: 70,
-          margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
-          child: new Stack(
-            alignment: AlignmentDirectional.topEnd,
-            children: <Widget>[
-              new Image.network(_provide.imgArr[index]),
-              new GestureDetector(
-                onTap: () {
-                  _provide.imgArr.removeAt(index);
-                  _provide.notify();
-                },
-                child: new Icon(Icons.close, color: Colors.white,),
-              )
-            ],
-          ),
+  Widget _setupItem(int index) {
+    return new GestureDetector(
+      onTap: () {
+      },
+      child: new Container(
+        width: 70,
+        height: 70,
+        margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+        child: new Stack(
+          alignment: AlignmentDirectional.topEnd,
+          children: <Widget>[
+            new Image.network(Provider.of<AdviceProvide>(context).imgArr[index]),
+            new GestureDetector(
+              onTap: () {
+                _provide.imgArr.removeAt(index);
+                _provide.notify();
+              },
+              child: new Icon(Icons.close, color: Colors.white,),
+            )
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
   Widget _setupPhone() {
@@ -249,14 +244,14 @@ class _AdviceContentState extends State<_AdviceContentPage> {
   }
 
   Future<void> _clickIcon() async {
-    if (_provide.imgArr.length >= 3) {
+    if (Provider.of<AdviceProvide>(context).imgArr.length >= 3) {
       Fluttertoast.showToast(
           msg: "最多上传3张",
           gravity: ToastGravity.CENTER
       );
       return;
     }
-    CommonUtil.clickIcon(3 - _provide.imgArr.length).then((data) {
+    CommonUtil.clickIcon(3 - Provider.of<AdviceProvide>(context).imgArr.length).then((data) {
       if (data != null) {
         _upload(data);
       }

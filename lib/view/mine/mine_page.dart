@@ -2,23 +2,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/mine_provide.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MinePage extends PageProvideNode {
+class MinePage extends StatelessWidget {
 
-  MineProvide provide = MineProvide();
-  MinePage() {
-    mProviders.provide(Provider<MineProvide>.value(provide));
-  }
+  final provide = MineProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _MineContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _MineContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -75,7 +80,6 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
   }
 
   Widget _setupBody() {
-    print(11111);
     return new Column(
       children: <Widget>[
         _setupHeader(),
@@ -88,47 +92,43 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
     );
   }
 
-  Provide<MineProvide> _setupHeader() {
-    return Provide<MineProvide>(
-        builder: (BuildContext context, Widget child, MineProvide value) {
-          print(22222222);
-          return new Container(
-            height: 260,
-            color: AppConfig.primaryColor,
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
-            child: new Row(
-              children: <Widget>[
-                new GestureDetector(
-                  onTap: () {
-                    _clickIcon();
-                  },
-                  child: new ClipOval(
-                      child: new CachedNetworkImage(
-                        width: 90,
-                        height: 90,
-                        key: Key(_provide.userInfo == null ? '':_provide.userInfo.userId),
-                        imageUrl: _provide.userInfo == null ? '':_provide.userInfo.userPic ?? '',
-                        fit: BoxFit.fill,
-                        placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
-                        errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
-                      )
-                  ),
-                ),
-
-                new Container(width: 8,),
-                new Expanded(
-                  child: new GestureDetector(
-                    onTap: _gotoLogin,
-                    child: new Text(_provide.userInfo == null ? '您还没有登录':_provide.userInfo.userName ?? '',
-                      style: TextStyle(color: Colors.white,fontSize: 18),),
-                  ),
-                ),
-                _provide.userInfo == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,)
-              ],
+  Widget _setupHeader() {
+    return new Container(
+      height: 260,
+      color: AppConfig.primaryColor,
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
+      child: new Row(
+        children: <Widget>[
+          new GestureDetector(
+            onTap: () {
+              _clickIcon();
+            },
+            child: new ClipOval(
+                child: new CachedNetworkImage(
+                  width: 90,
+                  height: 90,
+                  key: Key(Provider.of<MineProvide>(context).userInfo == null ? '':Provider.of<MineProvide>(context).userInfo.userId),
+                  imageUrl: Provider.of<MineProvide>(context).userInfo == null ? '':Provider.of<MineProvide>(context).userInfo.userPic ?? '',
+                  fit: BoxFit.fill,
+                  placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
+                  errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
+                )
             ),
-          );
-        });
+          ),
+
+          new Container(width: 8,),
+          new Expanded(
+            child: new GestureDetector(
+              onTap: _gotoLogin,
+              child: new Text(Provider.of<MineProvide>(context).userInfo == null ? '您还没有登录':Provider.of<MineProvide>(context).userInfo.userName ?? '',
+                style: TextStyle(color: Colors.white,fontSize: 18),),
+            ),
+          ),
+          Provider.of<MineProvide>(context).userInfo == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,)
+        ],
+      ),
+    );
   }
 
   List<GestureDetector> _setupItems(int count) {
@@ -174,29 +174,25 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
     );
   }
 
-  Provide<MineProvide> _setupBottom() {
-    return Provide<MineProvide>(
-        builder: (BuildContext context, Widget child, MineProvide value) {
-          print(3333);
-          return _provide.userInfo == null ? new Container():new Container(
-            height: 48,
-            width: MediaQuery.of(context).size.width - 30,
-            color: AppConfig.backgroundColor,
-            margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
-            child: new RaisedButton(
-              color: AppConfig.primaryColor,
-              onPressed: _loginOut,
-              child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
-            ),
-          );
-    });
+  Widget _setupBottom() {
+    return Provider.of<MineProvide>(context).userInfo == null ? new Container():new Container(
+      height: 48,
+      width: MediaQuery.of(context).size.width - 30,
+      color: AppConfig.backgroundColor,
+      margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
+      child: new RaisedButton(
+        color: AppConfig.primaryColor,
+        onPressed: _loginOut,
+        child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
+      ),
+    );
   }
 
   _loginOut() {
-    this._provide.loginOut(context);
+    _provide.loginOut(context);
   }
   _gotoLogin() {
-    this._provide.gotoLogin(context);
+    _provide.gotoLogin(context);
   }
   Future<void> _clickIcon() async {
     if (AppConfig.userTools.getUserData() == null) {

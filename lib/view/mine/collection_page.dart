@@ -7,20 +7,25 @@ import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/main/refresh/smart_refresher.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/collection_provide.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CollectionPage extends PageProvideNode {
+class CollectionPage extends StatelessWidget {
 
-  CollectionProvide provide = CollectionProvide();
-
-  CollectionPage() {
-    mProviders.provide(Provider < CollectionProvide>.value(provide));
-  }
+  final provide = CollectionProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _CollectionContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _CollectionContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -85,12 +90,9 @@ class _CollectionContentState extends State<_CollectionContentPage> {
     );
   }
 
-  Provide<CollectionProvide> _initView() {
-    return Provide<CollectionProvide>(
-        builder: (BuildContext context, Widget child, CollectionProvide value) {
-          return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
-              .initLoading(_provide.showEmpty, '暂无收藏');
-        });
+  Widget _initView() {
+    return Provider.of<CollectionProvide>(context).dataArr.length > 0 ? _buildListView() : AppConfig
+        .initLoading(_provide.showEmpty, '暂无收藏');
   }
 
   Widget _buildListView() {

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/base.dart';
+import 'package:flutter_flowermusic/base/base2.dart';
 import 'package:flutter_flowermusic/data/song.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
@@ -11,24 +11,29 @@ import 'package:flutter_flowermusic/viewmodel/home/home_provide.dart';
 import "package:flutter_flowermusic/main/refresh/pull_to_refresh.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomePage extends PageProvideNode {
-
-  HomeProvide provide = HomeProvide();
-
-  HomePage() {
-    mProviders.provide(Provider<HomeProvide>.value(provide));
-  }
+class HomePage extends StatelessWidget {
+  final provide = HomeProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _HomeContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _HomeContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
 class _HomeContentPage extends StatefulWidget {
+
   HomeProvide provide;
 
   _HomeContentPage(this.provide);
@@ -91,19 +96,18 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
         leading: new IconButton(icon: new Icon(Icons.my_location), onPressed: _pushSaved),
         centerTitle: true,
         actions: <Widget>[
-//          new IconButton(icon: new Icon(Icons.search), onPressed: _pushSaved),
         ],
       ),
       body: _initView(),
     );
   }
 
-  Provide<HomeProvide> _initView() {
-    return Provide<HomeProvide>(
-        builder: (BuildContext context, Widget child, HomeProvide value) {
-          return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
-              .initLoading(false);
-        });
+  Widget _initView() {
+    return Provider<HomeProvide>.value(
+      value: _provide,
+      child: _provide.dataArr.length > 0 ? _buildListView() : AppConfig
+          .initLoading(false)
+    );
   }
 
 
@@ -158,16 +162,18 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     _scrollControll.animateTo((PlayerTools.instance.currentPlayIndex * 70).toDouble(), duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
-  Provide<HomeProvide> _buildListView() {
-    return Provide<HomeProvide>(
-        builder: (BuildContext context, Widget child, HomeProvide value) {
-          return new SmartRefresher(
+  Widget _buildListView() {
+    return new Column(
+      children: <Widget>[
+        new Text('${_provide.count}'),
+        new Expanded(
+            child: new SmartRefresher(
               child: new ListView.builder(
-                  itemCount: value.dataArr.length,
+                  itemCount: _provide.dataArr.length,
                   controller: _scrollControll,
                   itemBuilder: (context, i) {
-                    if (value.dataArr.length > 0) {
-                      return getRow(value.dataArr[i], i);
+                    if (_provide.dataArr.length > 0) {
+                      return getRow(_provide.dataArr[i], i);
                     }
                   }),
               controller:_refreshController,
@@ -176,10 +182,13 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
               onHeaderRefresh: _onHeaderRefresh,
               onFooterRefresh: _onFooterRefresh,
               onOffsetChange: _onOffsetCallback,
-          );
-        }
+            )
+        )
+
+      ],
     );
   }
+
 
   Widget getRow(Song song, int index) {
     return new Column(
@@ -214,7 +223,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
                 ],)),
               new InkWell(
                 onTap: () {
-                  this._clickMore(song);
+                  this._clickMore(song, index);
                 },
                 child: new Container(
                   width: 40,
@@ -224,7 +233,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
               )
             ],),
           ),),
-        song.isExpaned == true ? _setupCellBottom(song) : new Container(height: 0,color: Colors.blue,)
+        _provide.dataArr[index].isExpaned == true ? _setupCellBottom(song) : new Container(height: 0,color: Colors.blue,)
       ],
     );
   }
@@ -283,9 +292,9 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     );
   }
 
-  _clickMore(Song song) {
-    song.isExpaned = !song.isExpaned;
-    _provide.notify();
+  _clickMore(Song song, int index) {
+//    _provide.expand(index);
+    Provider.of<HomeProvide>(context).expand(index);
   }
 
   _clicCommon(Song song) {
