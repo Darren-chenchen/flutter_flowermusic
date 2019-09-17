@@ -122,7 +122,12 @@ class _MiniPlayerContentState extends State<_MiniPlayerContentPage> with TickerP
                                 errorWidget: (context, url, error) => AppConfig.getPlaceHoder(35.0, 35.0),
                               ),
                             ),
-                          )
+                          ),
+                          _provide.cacheing ? new SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: const CircularProgressIndicator(strokeWidth: 3.0)
+                          ): new Container()
                         ],
                       ),
                     )

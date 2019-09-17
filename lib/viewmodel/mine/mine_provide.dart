@@ -8,11 +8,13 @@ import 'package:flutter_flowermusic/data/user.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/model/mine_respository.dart';
 import 'package:flutter_flowermusic/view/mine/advice_page.dart';
+import 'package:flutter_flowermusic/view/mine/author_page.dart';
 import 'package:flutter_flowermusic/view/mine/collection_page.dart';
 import 'package:flutter_flowermusic/view/mine/login_page.dart';
 import 'package:flutter_flowermusic/view/mine/setting_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MineProvide extends BaseProvide {
   List content = ['我的收藏', '五星好评', '意见反馈', '设置'];

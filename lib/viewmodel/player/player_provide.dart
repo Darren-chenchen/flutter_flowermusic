@@ -12,6 +12,11 @@ class PlayerProvide extends BaseProvide {
   PlayerProvide() {
     PlayerTools.instance.stateSubject.listen((state) {
       setControlls();
+      if (state == AudioToolsState.isCacheing || state == AudioToolsState.beginPlay) {
+        this.cacheing = true;
+      } else {
+        this.cacheing = false;
+      }
     });
 
     PlayerTools.instance.progressSubject.listen((progress) {
@@ -31,6 +36,12 @@ class PlayerProvide extends BaseProvide {
   List get controls => _controls;
   set controls(List controls) {
     _controls = controls;
+    notify();
+  }
+  bool _cacheing = false;
+  bool get cacheing => _cacheing;
+  set cacheing(bool cacheing) {
+    _cacheing = cacheing;
     notify();
   }
 
