@@ -33,6 +33,7 @@ class ResetPasswordProvide extends BaseProvide {
   bool get loginEnable => _loginEnable;
   set loginEnable(bool loginEnable) {
     _loginEnable = loginEnable;
+    notifyListeners();
   }
 
   /// 判断按钮是否可以点击

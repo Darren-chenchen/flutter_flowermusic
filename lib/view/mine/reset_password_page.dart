@@ -1,24 +1,28 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/reset_password_provide.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ResetPasswordPage extends PageProvideNode {
+class ResetPasswordPage extends StatelessWidget {
 
-  ResetPasswordProvide provide = ResetPasswordProvide();
-
-  ResetPasswordPage() {
-    mProviders.provide(Provider<ResetPasswordProvide>.value(provide));
-  }
+  final provide = ResetPasswordProvide();
 
   @override
   Widget buildContent(BuildContext context) {
-    return _ResetPasswordContentPage(provide);
+    return ChangeNotifierProvider.value(
+      value: provide,
+      child: _ResetPasswordContentPage(provide),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return buildContent(context);
   }
 }
 
@@ -39,6 +43,10 @@ class _ResetPasswordContentState extends State<_ResetPasswordContentPage> {
   final _subscriptions = CompositeSubscription();
 
   final _loading = LoadingDialog();
+
+  final _userTF = TextEditingController();
+  final _emailTF = TextEditingController();
+  final _pwdTF = TextEditingController();
 
   @override
   void initState() {
@@ -97,95 +105,101 @@ class _ResetPasswordContentState extends State<_ResetPasswordContentPage> {
       children: _setupContent(),
     );
   }
-  List<Provide<ResetPasswordProvide>> _setupContent() {
-    return new List<Provide<ResetPasswordProvide>>.generate(
+  List<Widget> _setupContent() {
+    return new List<Widget>.generate(
         3,
             (int index) =>
             _setupItem(index));
   }
 
 
-  Provide<ResetPasswordProvide>_setupItem(int index) {
-    return Provide<ResetPasswordProvide>(
-        builder: (BuildContext context, Widget child, ResetPasswordProvide value) {
-          return new Container(
-            margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
-            child: new Column(
-              children: <Widget>[
-                new Row(
-                  children: <Widget>[
-                    new Container(
-                      width: 60,
-                      child: new Text(_provide.titles[index], style: TextStyle(fontSize: 16)),
-                    ),
-                    new Expanded(
-                        child: new TextField(
-                            obscureText: (index == 2 && _provide.passwordVisiable == false) ? true:false,
-                            style: new TextStyle(color: Colors.black),
-                            decoration: InputDecoration(
-                              hintText: _provide.placeHoderText[index],
-                              hintStyle: new TextStyle(color: Colors.grey),
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                            ),
-                            onChanged: (str) {
-                              if (index == 0) {
-                                _provide.userName = str;
-                              }
-                              if (index == 1) {
-                                _provide.email = str;
-                              }
-                              if (index == 2) {
-                                _provide.password = str;
-                              }
-                            }
-                        )
-                    ),
+  Widget _setupItem(int index) {
+    return new Container(
+      margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+      child: new Column(
+        children: <Widget>[
+          new Row(
+            children: <Widget>[
+              new Container(
+                width: 60,
+                child: new Text(_provide.titles[index], style: TextStyle(fontSize: 16)),
+              ),
+              new Expanded(
+                  child: Consumer<ResetPasswordProvide>(builder: (build, provide, _) {
+                    return TextField(
+                        obscureText: (index == 2 &&
+                            provide.passwordVisiable == false) ? true : false,
+                        style: new TextStyle(color: Colors.black),
+                        controller: index == 0 ? _userTF:index == 1 ? _emailTF:_pwdTF,
+                        decoration: InputDecoration(
+                          hintText: provide.placeHoderText[index],
+                          hintStyle: new TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        onChanged: (str) {
+                          if (index == 0) {
+                            _provide.userName = str;
+                            provide.loginEnable = _provide.loginEnable;
+                          }
+                          if (index == 1) {
+                            _provide.email = str;
+                            provide.loginEnable = _provide.loginEnable;
+                          }
+                          if (index == 2) {
+                            _provide.password = str;
+                            provide.loginEnable = _provide.loginEnable;
+                          }
+                        });
+                  })
+              ),
 
-                    index == 2 ? _setupEyeOpened() : new Container()
-                  ],
-                ),
-                new Divider(height: 1, color: AppConfig.divider)
-              ],
-            ),
-          );
-        }
+              index == 2 ? _setupEyeOpened() : new Container()
+            ],
+          ),
+          new Divider(height: 1, color: AppConfig.divider)
+        ],
+      ),
     );
   }
 
 
-  Provide<ResetPasswordProvide> _setupEyeOpened() {
-    return Provide<ResetPasswordProvide>(
-        builder: (BuildContext context, Widget child, ResetPasswordProvide value) {
+  Widget _setupEyeOpened() {
+    print('_setupEyeOpened');
+    return Consumer<ResetPasswordProvide>(
+        builder: ((build, provide, _) {
           return new GestureDetector(
             onTap: () {
-              print(_provide.passwordVisiable);
-              _provide.passwordVisiable = !_provide.passwordVisiable;
+              print(provide.passwordVisiable);
+              provide.passwordVisiable =
+              !provide.passwordVisiable;
             },
             child: new Icon(
-              _provide.passwordVisiable ? Icons.remove_red_eye:Icons.panorama_fish_eye,
-              color: Colors.black,),
+              provide.passwordVisiable
+                  ? Icons.remove_red_eye
+                  : Icons.panorama_fish_eye,
+              color: Colors.black,
+            ),
           );
-        }
+        })
     );
   }
 
 
-  Provide<ResetPasswordProvide>  _setupLoginBtn() {
-    return Provide<ResetPasswordProvide>(
-        builder: (BuildContext context, Widget child, ResetPasswordProvide value) {
-          return new Container(
-            height: 48,
-            width: MediaQuery.of(context).size.width - 60,
-            margin: EdgeInsets.fromLTRB(15, 50, 15, 0),
-            child: new RaisedButton(
-              disabledColor: AppConfig.disabledMainColor,
-              color: AppConfig.primaryColor,
-              onPressed: value.loginEnable ? _resetPassword : null,
-              child: new Text('确 定', style: new TextStyle(color: Colors.white,fontSize: 18),),
-            ),
-          );
-        }
+  Widget _setupLoginBtn() {
+    print('_setupLoginBtn');
+    return new Container(
+      height: 48,
+      width: MediaQuery.of(context).size.width - 60,
+      margin: EdgeInsets.fromLTRB(15, 50, 15, 0),
+      child: Consumer<ResetPasswordProvide>(builder: (build, provide, _) {
+        return new RaisedButton(
+          disabledColor: AppConfig.disabledMainColor,
+          color: AppConfig.primaryColor,
+          onPressed: provide.loginEnable ? _resetPassword : null,
+          child: new Text('确 定', style: new TextStyle(color: Colors.white, fontSize: 18)),
+        );
+      }),
     );
   }
 
