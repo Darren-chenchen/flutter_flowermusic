@@ -2,44 +2,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
+import 'package:flutter_flowermusic/data/user.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/utils/common_util.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/mine_provide.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MinePage extends StatelessWidget {
+class MinePage extends StatefulWidget {
 
-  final provide = MineProvide();
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _MineContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _MineContentPage extends StatefulWidget {
-  MineProvide provide;
-
-  _MineContentPage(this.provide);
+  MinePage();
 
   @override
   State<StatefulWidget> createState() {
-    return _MineContentState();
+    // TODO: implement createState
+    return _MineContentPage();
   }
 }
 
-class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveClientMixin{
-  MineProvide _provide;
+class _MineContentPage extends State<MinePage> {
+  MineProvide _provide = MineProvide();
   final _subscriptions = CompositeSubscription();
 
   final _loading = LoadingDialog();
@@ -57,17 +39,18 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
     _scrollControll = ScrollController();
 
     print("mine===initState");
-    print(widget.provide);
-    _provide ??= widget.provide;
   }
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: AppConfig.backgroundColor,
-      body: new SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 60),
-        controller: _scrollControll,
-        child: _setupBody(),
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: new Scaffold(
+        backgroundColor: AppConfig.backgroundColor,
+        body: new SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 60),
+          controller: _scrollControll,
+          child: _setupBody(),
+        ),
       ),
     );
   }
@@ -87,10 +70,12 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
         new Column(
           children: _setupItems(_provide.colors.length),
         ),
-        Consumer<MineProvide>(builder: (build, provide, _) {
-          return _provide.userInfo == null ?  new Container(height: 1,) : _setupBottom();
-        },)
-
+        Selector<MineProvide, User>(
+          selector: (_, provide) => provide.userInfo,
+          builder: (_, value, child) {
+            return value == null ?  new Container(height: 1,) : _setupBottom();
+          },
+        ),
       ],
     );
   }
@@ -103,39 +88,48 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
       margin: EdgeInsets.fromLTRB(0, 0, 0, 12),
       child: new Row(
         children: <Widget>[
-          new GestureDetector(
-            onTap: () {
-              _clickIcon();
-            },
-            child: Consumer<MineProvide>(builder: (build, provide, _) {
-              return new ClipOval(
-                  child: new CachedNetworkImage(
-                    width: 90,
-                    height: 90,
-                    key: Key(_provide.userInfo == null ? '':_provide.userInfo.userId),
-                    imageUrl: _provide.userInfo == null ? '':_provide.userInfo.userPic ?? '',
-                    fit: BoxFit.fill,
-                    placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
-                    errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
-                  )
-              );
-            }),
-          ),
-
-          new Container(width: 8,),
-          new Expanded(
-            child: Consumer<MineProvide>(builder: (build, provide, _) {
+          Selector<MineProvide, User>(
+            selector: (_, provide) => provide.userInfo,
+            builder: (_, value, child) {
               return new GestureDetector(
-                onTap: _gotoLogin,
-                child: new Text(_provide.userInfo == null ? '您还没有登录':_provide.userInfo.userName ?? '',
-                  style: TextStyle(color: Colors.white,fontSize: 18),),
+                onTap: () {
+                  _clickIcon();
+                },
+                child: new ClipOval(
+                    child: new CachedNetworkImage(
+                      width: 90,
+                      height: 90,
+                      key: Key(value == null ? '':value.userId),
+                      imageUrl: value == null ? '':value.userPic ?? '',
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => AppConfig.getPlaceHoder(90.0, 90.0),
+                      errorWidget: (context, url, error) => AppConfig.getPlaceHoder(90.0, 90.0),
+                    )
+                ),
               );
-            }),
+            },
           ),
-          Consumer<MineProvide>(builder: (build, provide, _) {
-            return _provide.userInfo == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,);
-          })
-
+          new Container(width: 8,),
+          Selector<MineProvide, User>(
+            selector: (_, provide) => provide.userInfo,
+            builder: (_, value, child) {
+              print('_setupHeader2');
+              return new Expanded(
+                child: new GestureDetector(
+                  onTap: _gotoLogin,
+                  child: new Text(value == null ? '您还没有登录':value.userName ?? '',
+                    style: TextStyle(color: Colors.white,fontSize: 18),),
+                ),
+              );
+            },
+          ),
+          Selector<MineProvide, User>(
+            selector: (_, provide) => provide.userInfo,
+            builder: (_, value, child) {
+              print('_setupHeader3');
+              return value == null ? new Icon(Icons.keyboard_arrow_right):new Container(height: 1,);
+            },
+          ),
         ],
       ),
     );
@@ -185,19 +179,23 @@ class _MineContentState extends State<_MineContentPage> with AutomaticKeepAliveC
   }
 
   Widget _setupBottom() {
-    return Consumer<MineProvide>(builder: (build, provide, _) {
-      return _provide.userInfo == null ? new Container():new Container(
-        height: 48,
-        width: MediaQuery.of(context).size.width - 30,
-        color: AppConfig.backgroundColor,
-        margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
-        child: new RaisedButton(
-          color: AppConfig.primaryColor,
-          onPressed: _loginOut,
-          child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
-        ),
-      );
-    },);
+    return Selector<MineProvide, User>(
+      selector: (_, provide) => provide.userInfo,
+      builder: (_, value, child) {
+        print('_setupBottom');
+        return value == null ? new Container():new Container(
+          height: 48,
+          width: MediaQuery.of(context).size.width - 30,
+          color: AppConfig.backgroundColor,
+          margin: EdgeInsets.fromLTRB(15, 160, 15, 0),
+          child: new RaisedButton(
+            color: AppConfig.primaryColor,
+            onPressed: _loginOut,
+            child: new Text('退出登录', style: new TextStyle(color: Colors.white,fontSize: 18),),
+          ),
+        );
+      },
+    );
   }
 
   _loginOut() {

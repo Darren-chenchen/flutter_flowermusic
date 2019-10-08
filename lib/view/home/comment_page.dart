@@ -8,36 +8,23 @@ import 'package:flutter_flowermusic/main/dialog/dialog.dart';
 import 'package:flutter_flowermusic/main/refresh/smart_refresher.dart';
 import 'package:flutter_flowermusic/viewmodel/home/comment_provide.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CommentPage extends PageProvideNode {
+class CommentPage extends StatefulWidget {
 
-  CommentProvide provide = CommentProvide();
+  Song song;
 
-  CommentPage(Song song) {
-    provide.song = song;
-    mProviders.provide(Provider <CommentProvide>.value(provide));
-  }
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return _CommentContentPage(provide);
-  }
-}
-
-class _CommentContentPage extends StatefulWidget {
-  CommentProvide provide;
-
-  _CommentContentPage(this.provide);
+  CommentPage(this.song);
 
   @override
   State<StatefulWidget> createState() {
-    return _CommentContentState();
+    // TODO: implement createState
+    return _CommentContentPage();
   }
 }
 
-class _CommentContentState extends State<_CommentContentPage> {
+class _CommentContentPage extends State<CommentPage> {
 
   final _subscriptions = CompositeSubscription();
 
@@ -45,7 +32,7 @@ class _CommentContentState extends State<_CommentContentPage> {
 
   final _loading = LoadingDialog();
 
-  CommentProvide _provide;
+  CommentProvide _provide = CommentProvide();
 
   @override
   void initState() {
@@ -53,7 +40,7 @@ class _CommentContentState extends State<_CommentContentPage> {
     super.initState();
 
     _refreshController = new RefreshController();
-    _provide ??= widget.provide;
+    _provide.song = widget.song;
     _loadData();
     _provide.subjectMore.listen((hasMore) {
       if (hasMore) {
@@ -67,16 +54,19 @@ class _CommentContentState extends State<_CommentContentPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(_provide.song.title),
-        centerTitle: true
-      ),
-      body: new Column(
-        children: <Widget>[
-          new Expanded(child: _initView(),),
-          _buildBottomView()
-        ],
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: new Scaffold(
+        appBar: new AppBar(
+            title: new Text(_provide.song.title),
+            centerTitle: true
+        ),
+        body: new Column(
+          children: <Widget>[
+            new Expanded(child: _initView(),),
+            _buildBottomView()
+          ],
+        ),
       ),
     );
   }
@@ -86,11 +76,14 @@ class _CommentContentState extends State<_CommentContentPage> {
     _subscriptions.dispose();
   }
 
-  Provide<CommentProvide> _initView() {
-    return Provide<CommentProvide>(
-        builder: (BuildContext context, Widget child, CommentProvide value) {
-          return _provide.dataArr.length > 0 ? _buildListView() : AppConfig.initLoading(_provide.showEmpty, '暂无评论，来发表第一个评论吧');
-        });
+  _initView() {
+    return Selector<CommentProvide, int>(
+      selector: (_, provide) => provide.dataArr.length,
+      builder: (_, value, child) {
+        print('_initView');
+        return value > 0 ? _buildListView() : AppConfig.initLoading(_provide.showEmpty, '暂无评论，来发表第一个评论吧');
+      },
+    );
   }
 
   _loadData([bool isRefresh = true]) {
@@ -167,7 +160,12 @@ class _CommentContentState extends State<_CommentContentPage> {
                 },
                 child: new Row(
                   children: <Widget>[
-                    new Text('${comment.niceCount}'),
+                    Selector<CommentProvide, int>(
+                      selector: (_, provide) => comment.niceCount,
+                      builder: (_, value, child) {
+                        return new Text('${value}');
+                      },
+                    ),
                     new Container(width: 5,),
                     new Icon(Icons.thumb_up, color: Colors.grey,)
                   ],

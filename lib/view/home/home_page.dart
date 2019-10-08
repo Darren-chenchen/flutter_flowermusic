@@ -13,37 +13,18 @@ import 'package:rxdart/rxdart.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomePage extends StatelessWidget {
-  final provide = HomeProvide();
+class HomePage extends StatefulWidget {
 
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _HomeContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _HomeContentPage extends StatefulWidget {
-
-  HomeProvide provide;
-
-  _HomeContentPage(this.provide);
+  HomePage();
 
   @override
   State<StatefulWidget> createState() {
-    return _HomeContentState();
+    // TODO: implement createState
+    return _HomeContentPage();
   }
 }
 
-class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveClientMixin<_HomeContentPage> {
+class _HomeContentPage extends State<HomePage> {
 
   final _subscriptions = CompositeSubscription();
 
@@ -56,7 +37,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
-  HomeProvide _provide;
+  HomeProvide _provide = HomeProvide();
 
   @override
   void initState() {
@@ -65,7 +46,6 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
 
     _refreshController = new RefreshController();
     _scrollControll = new ScrollController();
-    _provide ??= widget.provide;
     _loadData();
     _provide.subjectMore.listen((hasMore) {
       print("_provide.subjectMore.listen${hasMore}");
@@ -90,20 +70,24 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
   @override
   Widget build(BuildContext context) {
     print('home-build(BuildContext context)');
-    return Scaffold(
-      appBar: new AppBar(
-        title: new Text('推荐歌曲'),
-        leading: new IconButton(icon: new Icon(Icons.my_location), onPressed: _pushSaved),
-        centerTitle: true,
-        actions: <Widget>[
-        ],
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: Scaffold(
+        appBar: new AppBar(
+          title: new Text('推荐歌曲'),
+          leading: new IconButton(icon: new Icon(Icons.my_location), onPressed: _pushSaved),
+          centerTitle: true,
+          actions: <Widget>[
+          ],
+        ),
+        body: _initView(),
       ),
-      body: _initView(),
     );
   }
 
   Widget _initView() {
     return Consumer<HomeProvide>(builder: (build, provide, _) {
+      print('Consumer-initView');
       return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
           .initLoading(false);
     },);
@@ -117,7 +101,8 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
     return new Column(
       children: <Widget>[
         Consumer<HomeProvide>(builder: (build, provide, _) {
-          return new Text('${_provide.count}');
+          print('Consumer1');
+          return new Text('${_provide.count}---该页面验证Consumer，点击cell上的图标展开一个cell，观察控制台的打印情况，结论：只要发送通知后使用Consumer的部分全部都会重绘，再其他页面我会使用Selector来验证局部的刷新');
         },),
         new Expanded(
             child: new SmartRefresher(
@@ -145,6 +130,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
 
   Widget getRow(Song song, int index) {
     return Consumer<HomeProvide>(builder: (build, provide, _) {
+      print('Consumer--getRow${index}');
       return new Column(
         children: <Widget>[
           new Container(
@@ -238,6 +224,7 @@ class _HomeContentState extends State<_HomeContentPage> with AutomaticKeepAliveC
               child: new Column(
                 children: <Widget>[
                   Consumer<HomeProvide>(builder: (build, provide, _) {
+                    print('Consumer-fav');
                     return new Icon(_provide.dataArr[index].isFav ? Icons.favorite:Icons.favorite_border, color: _provide.dataArr[index].isFav ? Colors.red:Colors.grey,);
                   },),
                   new Text('收藏', style: TextStyle(color: Colors.grey,fontSize: 12),)

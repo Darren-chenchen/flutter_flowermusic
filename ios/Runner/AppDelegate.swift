@@ -11,7 +11,7 @@ let HOST_URL = "http://chenliang.yishouhaoge.cn/#/"
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     
-    let controller: FlutterViewController = window.rootViewController as! FlutterViewController
+    let controller: FlutterBinaryMessenger = window.rootViewController as! FlutterBinaryMessenger
     let userdefault = FlutterMethodChannel(name: "darren.com.example.flutterFlowermusic/mutual", binaryMessenger: controller)
     userdefault.setMethodCallHandler { (call, result) in
         if "GoodComment" == call.method { // 好评

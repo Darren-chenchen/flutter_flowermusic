@@ -25,10 +25,10 @@ dependencies:
   cached_network_image: ^1.1.1
   flutter_html: ^0.9.6
   shared_preferences: ^0.5.1+2
-  fluttertoast: ^3.0.4
+  fluttertoast: ^3.1.2
   multi_image_picker: ^4.2.0
   audioplayers: ^0.11.0
-  flutter_svg: ^0.14.1
+  flutter_svg: ^0.13.1
   provider: ^3.1.0
 
 dev_dependencies:

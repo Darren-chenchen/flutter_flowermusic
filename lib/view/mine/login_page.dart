@@ -8,37 +8,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class LoginPage extends StatelessWidget {
-  final provide = LoginProvide();
+class LoginPage extends StatefulWidget {
 
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _LoginContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _LoginContentPage extends StatefulWidget {
-  LoginProvide provide;
-
-  _LoginContentPage(this.provide);
+  LoginPage();
 
   @override
   State<StatefulWidget> createState() {
-    return _LoginContentState();
+    // TODO: implement createState
+    return _LoginContentPage();
   }
 }
 
-class _LoginContentState extends State<_LoginContentPage> {
-  LoginProvide _provide;
+class _LoginContentPage extends State<LoginPage> {
+  LoginProvide _provide = LoginProvide();
   final _subscriptions = CompositeSubscription();
 
   final _loading = LoadingDialog();
@@ -51,28 +33,33 @@ class _LoginContentState extends State<_LoginContentPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _provide ??= widget.provide;
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Scaffold(
-      body: SingleChildScrollView(
-        child: new Column(
-          children: <Widget>[
-            _setupBack(),
-            _setupTop(),
-            _setupTextFields(),
-            _setupLoginBtn(),
-            _setupResetPwd(),
-            _setupBottom(),
-            new Container(
-              height: 20,
-            )
-          ],
-        ),
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: Scaffold(
+        body: _initView(),
+      ),
+    );
+  }
+
+  Widget _initView() {
+    return SingleChildScrollView(
+      child: new Column(
+        children: <Widget>[
+          _setupBack(),
+          _setupTop(),
+          _setupTextFields(),
+          _setupLoginBtn(),
+          _setupResetPwd(),
+          _setupBottom(),
+          new Container(
+            height: 20,
+          )
+        ],
       ),
     );
   }
@@ -145,35 +132,35 @@ class _LoginContentState extends State<_LoginContentPage> {
                 child: new Text(_provide.titles[index],
                     style: TextStyle(fontSize: 16)),
               ),
-              new Expanded(
-                  child: Consumer<LoginProvide>(builder: (build, provide, _) {
-                    return TextField(
-                        obscureText: (index == 2 &&
-                            provide.passwordVisiable == false) ? true : false,
-                        style: new TextStyle(color: Colors.black),
-                        controller: index == 0 ? _userTF:index == 1 ? _emailTF:_pwdTF,
-                        decoration: InputDecoration(
-                          hintText: provide.placeHoderText[index],
-                          hintStyle: new TextStyle(color: Colors.grey),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                        ),
-                        onChanged: (str) {
-                          if (index == 0) {
-                            _provide.userName = str;
-                            provide.loginEnable = _provide.loginEnable;
-                          }
-                          if (index == 1) {
-                            _provide.email = str;
-                            provide.loginEnable = _provide.loginEnable;
-                          }
-                          if (index == 2) {
-                            _provide.password = str;
-                            provide.loginEnable = _provide.loginEnable;
-                          }
-                        });
-                  })
+              Selector<LoginProvide, bool>(
+                selector: (_, provide) => provide.passwordVisiable,
+                builder: (_, value, child) {
+                  return new Expanded(
+                      child: TextField(
+                          obscureText: (index == 2 && value == false) ? true : false,
+                          style: new TextStyle(color: Colors.black),
+                          controller: index == 0 ? _userTF:index == 1 ? _emailTF:_pwdTF,
+                          decoration: InputDecoration(
+                            hintText: _provide.placeHoderText[index],
+                            hintStyle: new TextStyle(color: Colors.grey),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                          ),
+                          onChanged: (str) {
+                            if (index == 0) {
+                              _provide.userName = str;
+                            }
+                            if (index == 1) {
+                              _provide.email = str;
+                            }
+                            if (index == 2) {
+                              _provide.password = str;
+                            }
+                          })
+                  );
+                },
               ),
+
               index == 2 ? _setupEyeOpened() : new Container()
             ],
           ),
@@ -186,41 +173,43 @@ class _LoginContentState extends State<_LoginContentPage> {
 
   Widget _setupEyeOpened() {
     print('_setupEyeOpened');
-    return Consumer<LoginProvide>(
-      builder: ((build, provide, _) {
-        print('EyeOpened-refresh');
+    return Selector<LoginProvide, bool>(
+      selector: (_, provide) => provide.passwordVisiable,
+      builder: (_, value, child) {
         return new GestureDetector(
           onTap: () {
-            print(provide.passwordVisiable);
-            provide.passwordVisiable =
-            !provide.passwordVisiable;
+            print(value);
+            _provide.passwordVisiable =
+            !_provide.passwordVisiable;
           },
           child: new Icon(
-            provide.passwordVisiable
+            value
                 ? Icons.remove_red_eye
                 : Icons.panorama_fish_eye,
             color: Colors.black,
           ),
         );
-      })
+      },
     );
   }
 
   Widget _setupLoginBtn() {
     print('_setupLoginBtn');
-    return new Container(
-      height: 48,
-      width: MediaQuery.of(context).size.width - 60,
-      margin: EdgeInsets.fromLTRB(15, 50, 15, 0),
-      child: Consumer<LoginProvide>(builder: (build, provide, _) {
-        print('loginBtn-refresh');
-        return new RaisedButton(
-          disabledColor: AppConfig.disabledMainColor,
-          color: AppConfig.primaryColor,
-          onPressed: provide.loginEnable ? _login : null,
-          child: new Text('登 录', style: new TextStyle(color: Colors.white, fontSize: 18)),
+    return Selector<LoginProvide, bool>(
+      selector: (_, provide) => provide.loginEnable,
+      builder: (_, value, child) {
+        return new Container(
+          height: 48,
+          width: MediaQuery.of(context).size.width - 60,
+          margin: EdgeInsets.fromLTRB(15, 50, 15, 0),
+          child: new RaisedButton(
+            disabledColor: AppConfig.disabledMainColor,
+            color: AppConfig.primaryColor,
+            onPressed: value ? _login : null,
+            child: new Text('登 录', style: new TextStyle(color: Colors.white, fontSize: 18)),
+          ),
         );
-      }),
+      },
     );
   }
 
@@ -244,45 +233,47 @@ class _LoginContentState extends State<_LoginContentPage> {
   }
 
   Widget _setupBottom() {
-    print('_setupBottom');
-    return Consumer<LoginProvide>(builder: (build, provide, _) {
-      print('bottom-refresh');
-      return new Container(
-          height: MediaQuery.of(context).size.height - 560,
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              new GestureDetector(
-                onTap: () {
-                  provide.agreeProtocol = !provide.agreeProtocol;
-                },
-                child: provide.agreeProtocol
-                    ? new Icon(
-                  Icons.check_circle,
-                  color: AppConfig.primaryColor,
-                )
-                    : new Icon(
-                  Icons.check_circle_outline,
-                  color: AppConfig.grayTextColor,
+    print('bottom-refresh');
+    return Selector<LoginProvide, bool>(
+      selector: (_, provide) => provide.agreeProtocol,
+      builder: (_, value, child) {
+        return new Container(
+            height: MediaQuery.of(context).size.height - 560,
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                new GestureDetector(
+                  onTap: () {
+                    _provide.agreeProtocol = !_provide.agreeProtocol;
+                  },
+                  child: value
+                      ? new Icon(
+                    Icons.check_circle,
+                    color: AppConfig.primaryColor,
+                  )
+                      : new Icon(
+                    Icons.check_circle_outline,
+                    color: AppConfig.grayTextColor,
+                  ),
                 ),
-              ),
-              new GestureDetector(
-                onTap: () {
-                  provide.agreeProtocol = !provide.agreeProtocol;
-                },
-                child: new Text('已认真阅读并同意',
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-              ),
-              new GestureDetector(
-                onTap: _gotoRegiestProticol,
-                child: new Text('《注册协议》',
-                    style:
-                    TextStyle(fontSize: 14, color: AppConfig.primaryColor)),
-              )
-            ],
-          ));
-    });
+                new GestureDetector(
+                  onTap: () {
+                    _provide.agreeProtocol = !_provide.agreeProtocol;
+                  },
+                  child: new Text('已认真阅读并同意',
+                      style: TextStyle(fontSize: 14, color: Colors.grey)),
+                ),
+                new GestureDetector(
+                  onTap: _gotoRegiestProticol,
+                  child: new Text('《注册协议》',
+                      style:
+                      TextStyle(fontSize: 14, color: AppConfig.primaryColor)),
+                )
+              ],
+            ));
+      },
+    );
   }
 
   _login() {

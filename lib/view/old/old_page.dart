@@ -14,40 +14,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class OldPage extends StatelessWidget {
-
-  final provide = OldProvide();
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _OldContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _OldContentPage extends StatefulWidget {
-
-  OldProvide provide;
-
-  _OldContentPage(this.provide);
+class OldPage extends StatefulWidget {
+  OldPage();
 
   @override
   State<StatefulWidget> createState() {
-    return _OldContentState();
+    // TODO: implement createState
+    return _OldContentPage();
   }
 }
 
-class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveClientMixin<_OldContentPage> {
-
-  OldProvide _provide;
+class _OldContentPage extends State<OldPage> {
+  OldProvide _provide = OldProvide();
 
   final _subscriptions = CompositeSubscription();
 
@@ -66,7 +44,6 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
 
     _refreshController = new RefreshController();
 
-    _provide ??= widget.provide;
     _loadData();
     _provide.subjectMore.listen((hasMore) {
       if (hasMore) {
@@ -88,48 +65,56 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Color(0xFFF5F5F8),
-      appBar: new AppBar(
-        title: new Text('经典老歌'),
-        centerTitle: true,
-        actions: <Widget>[
-        ],
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: new Scaffold(
+        backgroundColor: Color(0xFFF5F5F8),
+        appBar: new AppBar(
+          title: new Text('经典老歌'),
+          centerTitle: true,
+          actions: <Widget>[],
+        ),
+        body: _initView(),
       ),
-      body: _initView(),
     );
   }
 
   Widget _initView() {
-    return Consumer<OldProvide>(builder: (build, provide, _) {
-      return _provide.dataArr.length > 0 ? _buildListView() : AppConfig
-          .initLoading(false);
-    },);
+    return Selector<OldProvide, int>(
+      selector: (_, provide) => provide.dataArr.length,
+      builder: (_, value, child) {
+        print('_initView');
+        return _provide.dataArr.length > 0
+            ? _buildListView()
+            : AppConfig.initLoading(false);
+      },
+    );
   }
 
   _loadData([bool isRefresh = true]) {
-    var s = _provide.getSongs(isRefresh).doOnListen(() {
-    }).doOnCancel(() {
-    }).listen((data) {
+    var s = _provide
+        .getSongs(isRefresh)
+        .doOnListen(() {})
+        .doOnCancel(() {})
+        .listen((data) {
       if (isRefresh) {
         _refreshController.sendBack(true, RefreshStatus.idle);
       }
-    }, onError: (e) {
-    });
+    }, onError: (e) {});
     _subscriptions.add(s);
   }
 
   _onHeaderRefresh() {
     _loadData();
   }
+
   _onFooterRefresh() {
     if (_provide.hasMore) {
       _loadData(false);
     }
   }
-  _onOffsetCallback(bool up, double offset) {
 
-  }
+  _onOffsetCallback(bool up, double offset) {}
 
   Widget _buildListView() {
     return new SmartRefresher(
@@ -140,7 +125,7 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
               return getRow(_provide.dataArr[i], i);
             }
           }),
-      controller:_refreshController,
+      controller: _refreshController,
       enablePullDown: true,
       enablePullUp: true,
       onHeaderRefresh: _onHeaderRefresh,
@@ -148,7 +133,6 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
       onOffsetChange: _onOffsetCallback,
     );
   }
-
 
   Widget getRow(Song song, int index) {
     return new Container(
@@ -159,34 +143,44 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
           children: <Widget>[
             new GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext c) =>
-                        OldDetailPage(song: song)
-                ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext c) =>
+                            OldDetailPage(song: song)));
               },
               child: new Container(
                 child: new Row(
                   children: <Widget>[
                     new Expanded(
                         child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Text(song.title, style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.left),
-                            new Container(
-                                height: 80,
-                                child: new Html(data: song.desc, defaultTextStyle: TextStyle(color: Colors.grey, fontSize: 12, height: 1),)
-                            )
-                          ],
-                        )
-                    ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Text(song.title,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left),
+                        new Container(
+                            height: 80,
+                            child: new Html(
+                              data: song.desc,
+                              defaultTextStyle: TextStyle(
+                                  color: Colors.grey, fontSize: 12, height: 1),
+                            ))
+                      ],
+                    )),
                     new CachedNetworkImage(
                       width: 120,
                       height: 120,
                       key: Key(song.imgUrl_s),
                       imageUrl: song.imgUrl_s,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => AppConfig.getPlaceHoder(120.0, 120.0),
-                      errorWidget: (context, url, error) => AppConfig.getPlaceHoder(120.0, 120.0),
+                      placeholder: (context, url) =>
+                          AppConfig.getPlaceHoder(120.0, 120.0),
+                      errorWidget: (context, url, error) =>
+                          AppConfig.getPlaceHoder(120.0, 120.0),
                     ),
                   ],
                 ),
@@ -194,34 +188,57 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
             ),
             new Container(
               padding: EdgeInsets.fromLTRB(0, 15, 0, 8),
-              child: Row(children: <Widget>[
-                new OpacityTapWidget(
-                  onTap: () {
-                    _provide.setSongs(index);
-                  },
-                  child: new Icon(Icons.play_circle_outline, color: Colors.black87,size: 28,),),
-                new Expanded(
-                    child: new Text(song.duration != '' ? ' 时长：' + CommonUtil.dealDuration(song.duration):'', style: TextStyle(color: Colors.grey, fontSize: 12),textAlign: TextAlign.left)
-                ),
-                new OpacityTapWidget(
-                  onTap: () {
-                    try{
-                      AppConfig.platform.invokeMethod('share', Song.toJson(song));
-                    } catch(e){
-                    }
-                  },
-                  child: new Icon(Icons.share, color: Colors.black87, size: 20,),
-                ),
-                new Container(width: 15,),
-                new InkWell(
-                  onTap: () {
-                    _clicFav(song);
-                  },
-                  child: Consumer<OldProvide>(builder: (build, provide, _) {
-                    return new Icon(_provide.dataArr[index].isFav ? Icons.favorite:Icons.favorite_border, size: 22, color: _provide.dataArr[index].isFav ? Colors.red:Colors.black87,);
-                  }),
-                )
-              ],),
+              child: Row(
+                children: <Widget>[
+                  new OpacityTapWidget(
+                    onTap: () {
+                      _provide.setSongs(index);
+                    },
+                    child: new Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.black87,
+                      size: 28,
+                    ),
+                  ),
+                  new Expanded(
+                      child: new Text(
+                          song.duration != ''
+                              ? ' 时长：' + CommonUtil.dealDuration(song.duration)
+                              : '',
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          textAlign: TextAlign.left)),
+                  new OpacityTapWidget(
+                    onTap: () {
+                      try {
+                        AppConfig.platform
+                            .invokeMethod('share', Song.toJson(song));
+                      } catch (e) {}
+                    },
+                    child: new Icon(
+                      Icons.share,
+                      color: Colors.black87,
+                      size: 20,
+                    ),
+                  ),
+                  new Container(
+                    width: 15,
+                  ),
+                  new InkWell(
+                      onTap: () {
+                        _clicFav(song);
+                      },
+                      child: Selector<OldProvide, bool>(
+                        selector: (_, provide) => _provide.dataArr[index].isFav,
+                        builder: (_, value, child) {
+                          return new Icon(
+                            value ? Icons.favorite : Icons.favorite_border,
+                            size: 22,
+                            color: value ? Colors.red : Colors.black87,
+                          );
+                        },
+                      ))
+                ],
+              ),
             )
           ],
         ));
@@ -229,15 +246,11 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
 
   _clicFav(Song song) {
     if (AppConfig.userTools.getUserData() == null) {
-      Fluttertoast.showToast(
-          msg: "请先登录",
-          gravity: ToastGravity.CENTER
-      );
+      Fluttertoast.showToast(msg: "请先登录", gravity: ToastGravity.CENTER);
       return;
     }
     if (song.isFav) {
-      showAlert(context, title: '确定要取消收藏？', onlyPositive: false)
-          .then((value) {
+      showAlert(context, title: '确定要取消收藏？', onlyPositive: false).then((value) {
         if (value) {
           this._uncollectionSong(song.id);
         }
@@ -246,26 +259,34 @@ class _OldContentState extends State<_OldContentPage> with AutomaticKeepAliveCli
       this._collectionSong(song.id);
     }
   }
+
   _collectionSong(String songId) {
-    var s = _provide.collectionSong(songId).doOnListen(() {
-      _loading.show(context);
-    }).doOnCancel(() {
-    }).listen((data) {
-      _loading.hide(context);
-    }, onError: (e) {
-      _loading.hide(context);
-    });
+    var s = _provide
+        .collectionSong(songId)
+        .doOnListen(() {
+          _loading.show(context);
+        })
+        .doOnCancel(() {})
+        .listen((data) {
+          _loading.hide(context);
+        }, onError: (e) {
+          _loading.hide(context);
+        });
     _subscriptions.add(s);
   }
+
   _uncollectionSong(String songId) {
-    var s = _provide.uncollectionSong(songId).doOnListen(() {
-      _loading.show(context);
-    }).doOnCancel(() {
-    }).listen((data) {
-      _loading.hide(context);
-    }, onError: (e) {
-      _loading.hide(context);
-    });
+    var s = _provide
+        .uncollectionSong(songId)
+        .doOnListen(() {
+          _loading.show(context);
+        })
+        .doOnCancel(() {})
+        .listen((data) {
+          _loading.hide(context);
+        }, onError: (e) {
+          _loading.hide(context);
+        });
     _subscriptions.add(s);
   }
 }
