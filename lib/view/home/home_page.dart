@@ -33,6 +33,8 @@ class _HomeContentPage extends State<HomePage> {
 
   final _loading = LoadingDialog();
 
+  final _cellHeight = 80.0;
+
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
@@ -121,53 +123,50 @@ class _HomeContentPage extends State<HomePage> {
               onFooterRefresh: _onFooterRefresh,
               onOffsetChange: _onOffsetCallback,
             )
-        )
-
-      ],
-    );
+        )]);
   }
-
 
   Widget getRow(Song song, int index) {
     return Consumer<HomeProvide>(builder: (build, provide, _) {
       print('Consumer--getRow${index}');
-      return new Column(
-        children: <Widget>[
-          new Container(
-            height: 70,
-            padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
-            child: new InkWell(
-              onTap: () {
-                _provide.setSongs(index);
-              },
-              child: new Row(children: <Widget>[
-                new CachedNetworkImage(
-                  width: 70,
-                  height: 70,
-                  key: Key(song.imgUrl_s),
-                  imageUrl: song.imgUrl_s,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => AppConfig.getPlaceHoder(70.0, 70.0),
-                  errorWidget: (context, url, error) => AppConfig.getPlaceHoder(70.0, 70.0),
-                ),
-                new Container(
-                  width: 8,
-                ),
-                new Expanded(child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Container(height: 4,),
-                    new Text(song.title, style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.left),
-                    new Container(height: 8,),
-                    new Text(song.duration != '' ? ' 时长：' + CommonUtil.dealDuration(song.duration):'', style: TextStyle(color: Colors.grey, fontSize: 12),textAlign: TextAlign.left)
-                  ],)),
-                new InkWell(
-                  onTap: () {
-                    _provide.count = index;
-                    _provide.dataArr[index].isExpaned = !provide.dataArr[index].isExpaned;
-                  },
-                  child: new Container(
-                    width: 40,
+
+    return new Column(
+      children: <Widget>[
+        new Container(
+          height: _cellHeight,
+          padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+          child: new InkWell(
+            onTap: () {
+              _provide.setSongs(index);
+            },
+            child: new Row(children: <Widget>[
+              new CachedNetworkImage(
+                width: 70,
+                height: 70,
+                key: Key(song.imgUrl_s),
+                imageUrl: song.imgUrl_s,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => AppConfig.getPlaceHoder(70.0, 70.0),
+                errorWidget: (context, url, error) => AppConfig.getPlaceHoder(70.0, 70.0),
+              ),
+              new Container(
+                width: 8,
+              ),
+              new Expanded(child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Container(height: 4,),
+                  new Text(song.title, style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),textAlign: TextAlign.left),
+                  new Container(height: 8,),
+                  new Text(song.duration != '' ? ' 时长：' + CommonUtil.dealDuration(song.duration):'', style: TextStyle(color: Colors.grey, fontSize: 12),textAlign: TextAlign.left)
+                ],)),
+              new InkWell(
+                onTap: () {
+                  _provide.count = index;
+                  _provide.dataArr[index].isExpaned = !provide.dataArr[index].isExpaned;
+                },
+                child: new Container(
+                  width: 40,
                     height: 70,
                     child: new Icon(Icons.more_horiz, color: Colors.grey,),
                   ),

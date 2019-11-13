@@ -18,6 +18,9 @@ class Song {
   bool isFav;
 
   String get id => _id;
+  set id(String id) {
+    _id = id;
+  }
 
   /// 自定义属性
   bool isExpaned = false;
