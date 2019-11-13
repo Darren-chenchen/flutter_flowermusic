@@ -14,9 +14,6 @@
 ![](https://raw.githubusercontent.com/Darren-chenchen/flutter_flowermusic/master/screenShots/Simulator%20Screen%20Shot%20-%20iPhone%20X%CA%80%20-%202019-05-06%20at%2018.23.25.png)
 
 
-### 2、[Vue项目请点击查看](https://github.com/Darren-chenchen/flowermusic_vue_github)
-
-
 
 
 # 安卓请扫码下载体验，ios没有证书，无法下载。
@@ -31,7 +28,7 @@
 # 该项目的特点
 
 ### 1、使用mvvm架构编写。  [MVVM架构在Flutter中的简单实践](https://www.jianshu.com/p/43eb17163468)
-### 2、Provide和RxDart 的使用，详细请参考 [Flutter | 状态管理特别篇 —— Provide](https://juejin.im/post/5c6d4b52f265da2dc675b407)
+### 2、Provider和RxDart 的使用
 
 
 # 部分封装介绍

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/app_config.dart';
 import 'package:flutter_flowermusic/main/dialog/dialog.dart';
@@ -7,38 +8,19 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AdvicePage extends StatelessWidget {
+class AdvicePage extends StatefulWidget {
 
-  final provide = AdviceProvide();
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _AdviceContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _AdviceContentPage extends StatefulWidget {
-  AdviceProvide provide;
-
-  _AdviceContentPage(this.provide);
+  AdvicePage();
 
   @override
   State<StatefulWidget> createState() {
-    return _AdviceContentState();
+    // TODO: implement createState
+    return _AdviceContentPage();
   }
 }
 
-class _AdviceContentState extends State<_AdviceContentPage> {
-  AdviceProvide _provide;
+class _AdviceContentPage extends State<AdvicePage> {
+  AdviceProvide _provide = AdviceProvide();
 
   final _subscriptions = CompositeSubscription();
   final _loading = LoadingDialog();
@@ -47,18 +29,19 @@ class _AdviceContentState extends State<_AdviceContentPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _provide ??= widget.provide;
   }
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: AppConfig.backgroundColor,
-      appBar: new AppBar(
-        title: new Text('意见反馈'),
-        centerTitle: true
+    return ChangeNotifierProvider.value(
+      value: _provide,
+      child: new Scaffold(
+        backgroundColor: AppConfig.backgroundColor,
+        appBar: new AppBar(
+            title: new Text('意见反馈'),
+            centerTitle: true
+        ),
+        body: _initView(),
       ),
-      body: _initView(),
     );
   }
 
@@ -109,7 +92,6 @@ class _AdviceContentState extends State<_AdviceContentPage> {
   }
 
   Widget _setupImages() {
-    print('_setupImages_setupImages${Provider.of<AdviceProvide>(context).imgArr}----${_provide.imgArr}');
     return new Column(
       children: <Widget>[
         new Container(
@@ -123,7 +105,12 @@ class _AdviceContentState extends State<_AdviceContentPage> {
           height: 30,
           alignment: Alignment.centerRight,
           color: Colors.white,
-          child: new Text('${Provider.of<AdviceProvide>(context).imgArr.length}/3',style: TextStyle(fontSize: 12),),
+          child: Selector<AdviceProvide, int>(
+            selector: (_, provide) => provide.imgArr.length,
+            builder: (_, value, child) {
+              return new Text('${value}/3',style: TextStyle(fontSize: 12));
+            },
+          ),
         ),
         new Container(
           height: 80,
@@ -135,11 +122,16 @@ class _AdviceContentState extends State<_AdviceContentPage> {
                 child: new Icon(Icons.add_box, color: AppConfig.backgroundColor,size: 70,),
               ),
               new Expanded(
-                  child: new ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: _setupItems(),
+                  child: Selector<AdviceProvide, int>(
+                    selector: (_, provide) => provide.imgArr.length,
+                    builder: (_, value, child) {
+                      return new ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: _setupItems(value),
+                      );
+                    },
                   )
-              )
+              ),
             ],
           ),
         )
@@ -147,14 +139,15 @@ class _AdviceContentState extends State<_AdviceContentPage> {
     );
   }
 
-  List<GestureDetector> _setupItems() {
-    return List<GestureDetector>.generate(Provider.of<AdviceProvide>(context).imgArr.length,
+  List<GestureDetector> _setupItems(int count) {
+    return List<GestureDetector>.generate(count,
             (int index) =>
             _setupItem(index)
     );
   }
 
   Widget _setupItem(int index) {
+    print(index);
     return new GestureDetector(
       onTap: () {
       },
@@ -165,7 +158,12 @@ class _AdviceContentState extends State<_AdviceContentPage> {
         child: new Stack(
           alignment: AlignmentDirectional.topEnd,
           children: <Widget>[
-            new Image.network(Provider.of<AdviceProvide>(context).imgArr[index]),
+            new CachedNetworkImage(
+                key: Key(_provide.imgArr[index]),
+                imageUrl: _provide.imgArr[index],
+                fit: BoxFit.cover,
+                placeholder: (context, url) => AppConfig.getLoadingPlaceHoder(20.0, 20.0)
+            ),
             new GestureDetector(
               onTap: () {
                 _provide.imgArr.removeAt(index);
@@ -244,14 +242,14 @@ class _AdviceContentState extends State<_AdviceContentPage> {
   }
 
   Future<void> _clickIcon() async {
-    if (Provider.of<AdviceProvide>(context).imgArr.length >= 3) {
+    if (_provide.imgArr.length >= 3) {
       Fluttertoast.showToast(
           msg: "最多上传3张",
           gravity: ToastGravity.CENTER
       );
       return;
     }
-    CommonUtil.clickIcon(3 - Provider.of<AdviceProvide>(context).imgArr.length).then((data) {
+    CommonUtil.clickIcon(3 - _provide.imgArr.length).then((data) {
       if (data != null) {
         _upload(data);
       }

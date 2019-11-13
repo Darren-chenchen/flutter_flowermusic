@@ -10,38 +10,20 @@ import 'package:flutter_flowermusic/viewmodel/mine/collection_provide.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CollectionPage extends StatelessWidget {
+class CollectionPage extends StatefulWidget {
 
-  final provide = CollectionProvide();
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: provide,
-      child: _CollectionContentPage(provide),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return buildContent(context);
-  }
-}
-
-class _CollectionContentPage extends StatefulWidget {
-  CollectionProvide provide;
-
-  _CollectionContentPage(this.provide);
+  CollectionPage();
 
   @override
   State<StatefulWidget> createState() {
+    // TODO: implement createState
     return _CollectionContentState();
   }
 }
 
-class _CollectionContentState extends State<_CollectionContentPage> {
-  CollectionProvide _provide;
+class _CollectionContentState extends State<CollectionPage> {
+
+  CollectionProvide _provider = CollectionProvide();
   RefreshController _refreshController;
   final _subscriptions = CompositeSubscription();
   final _loading = LoadingDialog();
@@ -51,11 +33,10 @@ class _CollectionContentState extends State<_CollectionContentPage> {
     // TODO: implement initState
     super.initState();
     _refreshController = new RefreshController();
-    _provide ??= widget.provide;
     _loadData();
   }
   _loadData() {
-    var s = _provide.favList().doOnListen(() {
+    var s = _provider.favList().doOnListen(() {
     }).doOnCancel(() {
     }).listen((data) {
       _refreshController.sendBack(true, RefreshStatus.idle);
@@ -64,7 +45,7 @@ class _CollectionContentState extends State<_CollectionContentPage> {
     _subscriptions.add(s);
   }
   _uncollectionSong(String songId) {
-    var s = _provide.uncollectionSong(songId).doOnListen(() {
+    var s = _provider.uncollectionSong(songId).doOnListen(() {
       _loading.show(context);
     }).doOnCancel(() {
     }).listen((data) {
@@ -81,36 +62,44 @@ class _CollectionContentState extends State<_CollectionContentPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('我的收藏'),
-        centerTitle: true,
+    return ChangeNotifierProvider.value(
+      value: _provider,
+      child: new Scaffold(
+        appBar: new AppBar(
+          title: new Text('我的收藏'),
+          centerTitle: true,
+        ),
+        body: _initView(),
       ),
-      body: _initView(),
     );
   }
 
   Widget _initView() {
-    return Provider.of<CollectionProvide>(context).dataArr.length > 0 ? _buildListView() : AppConfig
-        .initLoading(_provide.showEmpty, '暂无收藏');
+    return Selector<CollectionProvide, int>(
+      selector: (_, provide) => provide.dataArr.length,
+      builder: (_, value, child) {
+        return value > 0 ? _buildListView() : AppConfig
+            .initLoading(_provider.showEmpty, '暂无收藏');
+      },
+    );
   }
 
   Widget _buildListView() {
     return new SmartRefresher(
       child: new ListView.builder(
-          itemCount: _provide.dataArr.length,
+          itemCount: _provider.dataArr.length,
           itemBuilder: (context, i) {
-            if (_provide.dataArr.length > 0) {
+            if (_provider.dataArr.length > 0) {
               return new Dismissible(
-                  key: new Key(_provide.dataArr[i].id),
+                  key: new Key(_provider.dataArr[i].id),
                   confirmDismiss: (DismissDirection direction) async {
                     bool res = await showAlert(context, title: '确定要取消收藏该歌曲？', onlyPositive: false);
                     return res;
                   },
                   onDismissed: (direction) {
-                    this._uncollectionSong(_provide.dataArr[i].id);
+                    this._uncollectionSong(_provider.dataArr[i].id);
                   },
-                  child: getRow(_provide.dataArr[i]));
+                  child: getRow(_provider.dataArr[i]));
             }
           }),
       controller:_refreshController,

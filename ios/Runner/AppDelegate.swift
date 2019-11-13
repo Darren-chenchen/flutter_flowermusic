@@ -42,7 +42,7 @@ let HOST_URL = "http://chenliang.yishouhaoge.cn/#/"
     // 五星好评
     func goodComment() {
         var urlStr = ""
-        urlStr = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1459852637&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
+        urlStr = "https://www.darrenblog.cn/#/detail/5cd281787bb725236692b6c2"
         let url = URL.init(string: urlStr)!
         if #available(iOS 10.0, *) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
