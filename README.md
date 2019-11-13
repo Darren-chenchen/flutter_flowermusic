@@ -2,6 +2,10 @@
 # 备注：
 
 ### 2019年谷歌推出Provider，代替 Provide 成为官方推荐的状态管理方式，Provide已经不再维护，所有项目已经逐渐替换成了Provider，项目默认分支是provider，可下载该分支查看。
+
+
+## 如果该demo对您有启发，请帮我点个广告，谢谢 https://www.darrenblog.cn/#/detail/5dbf9a8a7bb725236692b6d4
+
  
 # 阅读之前
 
