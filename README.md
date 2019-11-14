@@ -22,7 +22,7 @@
 
 # 安卓请扫码下载体验，ios没有证书，无法下载。
 
-![](https://raw.githubusercontent.com/Darren-chenchen/flutter_flowermusic/master/screenShots/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202019-05-07%20%E4%B8%8A%E5%8D%889.14.20.png)
+![](https://github.com/Darren-chenchen/flutter_flowermusic/blob/provider/screenShots/QRCode_258.png?raw=true)
 
 
 # 项目结构
