@@ -20,7 +20,7 @@
 
 
 
-# 安卓请扫码下载体验，ios没有证书，无法下载。
+# 安卓请扫码下载体验，ios没有证书，无法下载。密码123
 
 ![](https://github.com/Darren-chenchen/flutter_flowermusic/blob/provider/screenShots/QRCode_258.png?raw=true)
 
