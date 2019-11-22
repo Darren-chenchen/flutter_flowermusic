@@ -133,3 +133,7 @@ void main() async {
 ### 1、建议大家把重点放在项目架构的优化上面(mvvm)。
 
 ### 2、该项目只供学习交流使用，严禁用于商业用途.....
+
+### 咖啡就不喝了，如果这个demo对你有帮助，那就来波众筹吧，我将用于续费服务器和提高带宽，并继续开发相关的flutter实践项目。
+
+![()](https://raw.githubusercontent.com/Darren-chenchen/flutter_flowermusic/master/screenShots/666.png)
