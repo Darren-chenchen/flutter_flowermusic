@@ -134,6 +134,3 @@ void main() async {
 
 ### 2、该项目只供学习交流使用，严禁用于商业用途.....
 
-### 如果这个demo对你有帮助，那就来波众筹吧，我将用于续费服务器和提高带宽，并继续开发相关的flutter实践项目。
-
-![()](https://raw.githubusercontent.com/Darren-chenchen/flutter_flowermusic/provider/screenShots/666.png)
