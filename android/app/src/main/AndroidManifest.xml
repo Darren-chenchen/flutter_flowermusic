@@ -20,7 +20,8 @@
     <application
         android:name=".App"
         android:label="flutter_flowermusic"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
         <!--value=YOUR_ADMOB_APP_ID-->
         <meta-data
