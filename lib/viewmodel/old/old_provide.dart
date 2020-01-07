@@ -38,7 +38,7 @@ class OldProvide extends BaseProvide {
   final OldRepo _repo = OldRepo();
 
   Observable getSongs(bool isRefrsh) {
-    isRefrsh ? this.page = 0 : this.page++;
+    isRefrsh ? page = 0 : page++;
     var query = {
       'page': this.page,
       'pageSize': 10,
@@ -50,6 +50,7 @@ class OldProvide extends BaseProvide {
     return _repo
         .getSongs(query)
         .doOnData((result) {
+          print("11111111111"+result.data.toString()+"");
       this.hasMore = result.totalPage >= this.page;
       if (isRefrsh) {
         this.dataArr.clear();

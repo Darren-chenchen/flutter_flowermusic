@@ -1,17 +1,19 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:flutter_flowermusic/main_provide.dart';
 import 'package:flutter_flowermusic/view/home/home_page.dart';
 import 'package:flutter_flowermusic/view/mine/mine_page.dart';
 import 'package:flutter_flowermusic/view/old/old_page.dart';
 import 'package:flutter_flowermusic/view/player/mini_player_page.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 
-class App extends PageProvideNode {
+import 'base/base2.dart';
+
+class App extends PageProvideNode2 {
 
   App() {
-    mProviders.provide(Provider<MainProvide>.value(MainProvide.instance));
+//    mProviders.add(MainProvide.instance);
+//    mProviders = MainProvide.instance;
   }
   @override
   Widget buildContent(BuildContext context) {
@@ -75,16 +77,19 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: new Stack(
-          alignment: AlignmentDirectional.bottomEnd,
-          overflow: Overflow.visible,
-          children: <Widget>[
-            _initTabBarView(),
-            _initMiniPlayer()
-          ],
-        ),
-        bottomNavigationBar: _initBottomNavigationBar()
+    return ChangeNotifierProvider(
+      builder: (context) => _provide,
+      child: new Scaffold(
+          body: new Stack(
+            alignment: AlignmentDirectional.bottomEnd,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              _initTabBarView(),
+              _initMiniPlayer()
+            ],
+          ),
+          bottomNavigationBar: _initBottomNavigationBar()
+      ),
     );
   }
 
@@ -101,62 +106,65 @@ class _AppState extends State<_AppContentPage> with TickerProviderStateMixin<_Ap
 //    );
 //  }
 
-  Provide<MainProvide> _initTabBarView() {
-    return Provide<MainProvide>(
-        builder: (BuildContext context, Widget child, MainProvide value) {
-          return IndexedStack(
-            index: _provide.currentIndex,
-            children: <Widget>[
-              _home,
-              _old,
-              _mine
-            ],
-          );
-        });
+  Widget _initTabBarView() {
+    return Consumer(
+        builder : (BuildContext context, MainProvide mainProvider, Widget child) {
+        return IndexedStack(
+          index: _provide.currentIndex,
+          children: <Widget>[
+            _home,
+            _old,
+            _mine
+          ],
+        );
+      }
+    );
   }
 
-  Provide<MainProvide> _initMiniPlayer() {
-    return Provide<MainProvide>(
-        builder: (BuildContext context, Widget child, MainProvide value) {
-          return Visibility(
-            visible: _provide.showMini,
-            child: new FadeTransition(
-              opacity: _tranTween.animate(_animationMini),
-              child: new Container(
-                width: 80,
-                height: 110,
-                child: _miniPage,
-              ),
-            ),
-          );
-        });
+  Widget _initMiniPlayer() {
+     return Consumer(
+       builder: (BuildContext context, MainProvide mainProvider, Widget child) {
+         return Visibility(
+           visible: mainProvider.showMini,
+           child: new FadeTransition(
+             opacity: _tranTween.animate(_animationMini),
+             child: new Container(
+               width: 80,
+               height: 110,
+               child: _miniPage,
+             ),
+           ),
+         );
+       }
+     );
   }
 
-  Provide<MainProvide> _initBottomNavigationBar() {
-    return Provide<MainProvide>(
-        builder: (BuildContext context, Widget child, MainProvide value) {
-          return Theme(
-              data: new ThemeData(
-                  canvasColor: Colors.white, // BottomNavigationBar背景色
-                  textTheme: Theme.of(context).textTheme.copyWith(caption: TextStyle(color: Colors.grey))
-              ),
-              child: BottomNavigationBar(
-                  fixedColor: Colors.black,
-                  currentIndex: _provide.currentIndex,
-                  onTap: ontap,
-                  type: BottomNavigationBarType.fixed,
-                  items: [
-                    new BottomNavigationBarItem(
-                        icon: new Icon(Icons.music_video),
-                        title: new Text('推荐')),
-                    new BottomNavigationBarItem(
-                        icon: new Icon(Icons.music_note),
-                        title: new Text('经典')),
-                    new BottomNavigationBarItem(
-                        icon: new Icon(Icons.people),
-                        title: new Text('我的'))
-                  ])
-          );
-        });
+   Widget _initBottomNavigationBar() {
+    return Theme(
+        data: new ThemeData(
+            canvasColor: Colors.white, // BottomNavigationBar背景色
+            textTheme: Theme.of(context).textTheme.copyWith(caption: TextStyle(color: Colors.grey))
+        ),
+        child: Consumer(
+          builder: (BuildContext context, MainProvide mainProvider, Widget child) {
+            return BottomNavigationBar(
+                fixedColor: Colors.red,
+                currentIndex: mainProvider.currentIndex,
+                onTap: ontap,
+                type: BottomNavigationBarType.fixed,
+                items: [
+                  new BottomNavigationBarItem(
+                      icon: new Icon(Icons.music_video),
+                      title: new Text('推荐')),
+                  new BottomNavigationBarItem(
+                      icon: new Icon(Icons.music_note),
+                      title: new Text('经典')),
+                  new BottomNavigationBarItem(
+                      icon: new Icon(Icons.people),
+                      title: new Text('我的'))
+                ]);
+          }
+        )
+    );
   }
 }

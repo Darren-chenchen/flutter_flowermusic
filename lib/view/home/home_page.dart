@@ -112,9 +112,7 @@ class _HomeContentPage extends State<HomePage> {
                   itemCount: _provide.dataArr.length,
                   controller: _scrollControll,
                   itemBuilder: (context, i) {
-                    if (_provide.dataArr.length > 0) {
                       return getRow(_provide.dataArr[i], i);
-                    }
                   }),
               controller:_refreshController,
               enablePullDown: true,

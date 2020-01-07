@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowermusic/base/base.dart';
+import 'package:flutter_flowermusic/base/base2.dart';
 import 'package:flutter_flowermusic/viewmodel/mine/regiest_provide.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
+//import 'package:provide/provide.dart';
 import 'package:rxdart/rxdart.dart';
 
-class RegiestProtocolPage extends PageProvideNode {
+class RegiestProtocolPage extends PageProvideNode2 {
 
-  RegiestProvide provide = RegiestProvide();
+  RegiestProvide provider = RegiestProvide();
 
   RegiestProtocolPage() {
-    mProviders.provide(Provider<RegiestProvide>.value(provide));
+//    mProviders.provide(Provider<RegiestProvide>.value(provide));
+//  mProviders = provider;
   }
 
   @override
   Widget buildContent(BuildContext context) {
-    return _RegiestProtocolContentPage(provide);
+    return _RegiestProtocolContentPage(provider);
+  }
+
+  @override
+  BaseProvide2 initProvide() {
+    // TODO: implement initProvide
+    return provider;
   }
 }
 
@@ -58,21 +67,24 @@ class _RegiestProtocolContentState extends State<_RegiestProtocolContentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Color(0xFFFFFFFF),
-      appBar: new AppBar(
-        title: new Text('注册协议'),
-        centerTitle: true,
-        actions: <Widget>[
-        ],
+    return ChangeNotifierProvider(
+      builder: (context) => _provide,
+      child: new Scaffold(
+        backgroundColor: Color(0xFFFFFFFF),
+        appBar: new AppBar(
+          title: new Text('注册协议'),
+          centerTitle: true,
+          actions: <Widget>[
+          ],
+        ),
+        body: _buildBody(),
       ),
-      body: _buildBody(),
     );
   }
 
-  Provide<RegiestProvide> _buildBody() {
-    return Provide<RegiestProvide>(
-        builder: (BuildContext context, Widget child, RegiestProvide value) {
+  Consumer<RegiestProvide> _buildBody() {
+    return Consumer<RegiestProvide>(
+        builder : (BuildContext context, RegiestProvide value, Widget child) {
           return new Container(
               padding: EdgeInsets.fromLTRB(8, 12, 8, 12),
               child: new ListView.builder(

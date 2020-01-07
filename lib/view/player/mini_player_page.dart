@@ -8,14 +8,14 @@ import 'package:flutter_flowermusic/tools/audio_tool.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:flutter_flowermusic/view/player/full_player_page.dart';
 import 'package:flutter_flowermusic/viewmodel/player/player_provide.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 
 
 class MiniPlayerPage extends PageProvideNode {
   PlayerProvide provide = PlayerProvide();
 
   MiniPlayerPage() {
-    mProviders.provide(Provider<PlayerProvide>.value(provide));
+//    mProviders.provide(Provider<PlayerProvide>.value(provide));
   }
 
   @override
@@ -87,12 +87,15 @@ class _MiniPlayerContentState extends State<_MiniPlayerContentPage> with TickerP
 
   @override
   Widget build(BuildContext context) {
-    return _buildView();
+    return ChangeNotifierProvider(
+      builder: (context) => _provide,
+      child: _buildView(),
+    );
   }
 
-  Provide<PlayerProvide> _buildView() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _buildView() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new Container(
             margin: EdgeInsets.fromLTRB(0, 0, 0, 20),
             child: new Stack(
