@@ -17,9 +17,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MineProvide extends BaseProvide {
-  List content = ['我的收藏', '五星好评', '意见反馈', '设置'];
-  List icons = [Icons.favorite_border, Icons.star_border, Icons.email, Icons.settings];
-  List colors = [Color(0xFF007aff), Color(0xFFFF7F00), Color(0xFFEEAD0E), Color(0xFFC0FF3E)];
+  List content = ['我的收藏', '五星好评', '意见反馈', '设置', '关于作者'];
+  List icons = [Icons.favorite_border, Icons.star_border, Icons.email, Icons.settings, Icons.settings];
+  List colors = [Color(0xFF007aff), Color(0xFFFF7F00), Color(0xFFEEAD0E), Color(0xFFC0FF3E), Color(0xFFC0FF3E)];
 
   User _userInfo;
   User get userInfo => _userInfo;
@@ -90,6 +90,10 @@ class MineProvide extends BaseProvide {
     if (index == 3) {
       Navigator.push(context, MaterialPageRoute(
           builder: (_) => SettingPage()));
+    }
+    if (index == 4) {
+      Navigator.push(context, MaterialPageRoute(
+          builder: (_) => AuthorPage()));
     }
   }
 
