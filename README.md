@@ -3,6 +3,8 @@
 
 ### 2019年谷歌推出Provider，代替 Provide 成为官方推荐的状态管理方式，Provide已经不再维护，所有项目已经逐渐替换成了Provider，项目默认分支是provider，可下载该分支查看。
 
+## 开发环境 flutter v1.12.13+hotfix.5（如有报错可能跟flutter版本相关，可根据个人的flutter版本进行调整）
+
 
 ## 个人博客了解下 https://www.darrenblog.cn/#/detail/5cd281787bb725236692b6c2
 
