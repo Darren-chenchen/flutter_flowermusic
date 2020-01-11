@@ -44,7 +44,7 @@ class CommentProvide extends BaseProvide {
 
   /// 评论列表
   Observable commentList(bool isRefrsh) {
-    isRefrsh ? this.page = 0 : this.page++;
+    isRefrsh ? page = 0 : page++;
     return _repo
         .commentList(this.page, song.id)
         .doOnData((result) {

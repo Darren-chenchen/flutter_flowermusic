@@ -52,7 +52,7 @@ class LoginProvide extends BaseProvide {
       this.loginEnable = false;
     }
     print('44444${this.loginEnable}');
-//    notifyListeners();
+    notifyListeners();
   }
 
   /// 密码是否是可见的

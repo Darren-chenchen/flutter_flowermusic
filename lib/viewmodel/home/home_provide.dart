@@ -55,7 +55,7 @@ class HomeProvide extends BaseProvide {
   }
 
   Observable getSongs(bool isRefrsh) {
-    isRefrsh ? this.page = 0 : this.page++;
+    isRefrsh ? page = 0 : page++;
     var query = {
       'page': this.page,
       'pageSize': 30,
