@@ -6,7 +6,7 @@ import 'package:flutter_flowermusic/main/tap/opacity_tap_widget.dart';
 import 'package:flutter_flowermusic/tools/audio_tool.dart';
 import 'package:flutter_flowermusic/tools/player_tool.dart';
 import 'package:flutter_flowermusic/viewmodel/player/player_provide.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FullPlayerPage extends PageProvideNode {
@@ -14,7 +14,7 @@ class FullPlayerPage extends PageProvideNode {
   PlayerProvide provide = PlayerProvide();
 
   FullPlayerPage() {
-    mProviders.provide(Provider<PlayerProvide>.value(provide));
+//    mProviders.provide(Provider<PlayerProvide>.value(provide));
   }
 
   @override
@@ -102,28 +102,31 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Scaffold(
-      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-      body: _buildGesture(),
+    return ChangeNotifierProvider(
+      builder: (context) => _provide,
+      child: new Scaffold(
+        backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+        body: _buildGesture(),
+      ),
     );
   }
 
-  Provide<PlayerProvide> _buildGesture() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _buildGesture() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new GestureDetector(
             onVerticalDragUpdate: (offset) {
-              _provide.offsetY += offset.delta.dy;
+              value.offsetY += offset.delta.dy;
             },
             onVerticalDragEnd: (offset) {
-              if (_provide.offsetY > MediaQuery.of(context).size.height * 0.4) {
+              if (value.offsetY > MediaQuery.of(context).size.height * 0.4) {
                 animationToBottom();
               } else {
                 this.animationToTop();
               }
             },
             child: new Transform.translate(
-              offset: Offset(0, (_provide.offsetY >= 0.0 ? _provide.offsetY:0.0)),
+              offset: Offset(0, (value.offsetY >= 0.0 ? value.offsetY:0.0)),
               child: _buildView(),
             ),
           );
@@ -156,9 +159,9 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     ges_controller.forward(from: 0);
   }
 
-  Provide<PlayerProvide> _buildView() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _buildView() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new Container(
             child:  Stack(
               fit: StackFit.expand,
@@ -179,9 +182,9 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     );
   }
 
-  Provide<PlayerProvide> _setupContent() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _setupContent() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new Column(
             children: <Widget>[
               _setupTop(),
@@ -193,9 +196,9 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     );
   }
 
-  Provide<PlayerProvide> _setupTop() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _setupTop() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
       return new SafeArea(
           child: new Row(
             children: <Widget>[
@@ -220,9 +223,9 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     });
   }
 
-  Provide<PlayerProvide> _setupMiddle() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _setupMiddle() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new Container(
             margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: new Stack(
@@ -278,9 +281,9 @@ class _FullPlayerContentState extends State<_FullPlayerContentPage> with TickerP
     );
   }
 
-  Provide<PlayerProvide> _setupSlide() {
-    return Provide<PlayerProvide>(
-        builder: (BuildContext context, Widget child, PlayerProvide value) {
+  Widget _setupSlide() {
+    return Consumer<PlayerProvide>(
+        builder: (BuildContext context, PlayerProvide value, Widget child) {
           return new Container(
             margin: EdgeInsets.fromLTRB(10, 50, 10, 0),
             child: new Row(

@@ -1,11 +1,8 @@
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_flowermusic/base/base.dart';
-import 'package:flutter_flowermusic/data/song.dart';
-import 'package:flutter_flowermusic/view/home/comment_page.dart';
 
-class MainProvide extends BaseProvide {
+import 'base/base2.dart';
+
+class MainProvide extends BaseProvide2 {
 
   // 工厂模式
   factory MainProvide() =>_getInstance();

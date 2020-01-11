@@ -58,9 +58,8 @@ List<Widget> _buildAlertActions(BuildContext context, bool onlyPositive, String 
   }
 }
 
-/**
- * 显示loading框  , 隐藏调用 Navigator.pop(context)
- */
+
+///  显示loading框  , 隐藏调用 Navigator.pop(context)
 Future _showLoadingDialog(BuildContext c, LoadingDialog loading, {bool cancelable = true}) =>
     showDialog(context: c, barrierDismissible: cancelable, builder: (BuildContext c) => loading);
 
