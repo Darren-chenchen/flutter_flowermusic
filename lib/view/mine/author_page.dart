@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_flowermusic/base/base.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AuthorPage extends StatefulWidget {
@@ -8,7 +7,7 @@ class AuthorPage extends StatefulWidget {
   _AuthorPageState createState() => _AuthorPageState();
 }
 
-class _AuthorPageState extends BaseState<AuthorPage> {
+class _AuthorPageState extends State<AuthorPage> {
   @override
   void initState() {
     super.initState();
@@ -16,7 +15,6 @@ class _AuthorPageState extends BaseState<AuthorPage> {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 

@@ -26,7 +26,7 @@ dependencies:
   flutter_html: ^0.9.6
   shared_preferences: ^0.5.1+2
   fluttertoast: ^3.1.3
-  multi_image_picker: ^4.3.6
+  multi_image_picker: ^4.6.1
   audioplayers: ^0.11.0
   flutter_svg: ^0.13.1
   provider: ^3.1.0
