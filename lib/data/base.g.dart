@@ -6,17 +6,17 @@ part of 'base.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BaseResponse<T> _$BaseResponseFromJson<T>(Map<String, dynamic> json) {
-  return BaseResponse<T>()
-    ..code = json['code'] as int
-    ..total = json['total'] as int
-    ..totalPage = json['totalPage'] as int
-    ..data = json['data']
-    ..message = json['message'] as String
-    ..success = json['success'] as bool;
+BaseResponse _$BaseResponseFromJson(Map<String, dynamic> json) {
+  return BaseResponse(
+      code: json['code'] as int,
+      total: json['total'] as int,
+      totalPage: json['totalPage'] as int,
+      data: json['data'],
+      message: json['message'] as String,
+      success: json['success'] as bool);
 }
 
-Map<String, dynamic> _$BaseResponseToJson<T>(BaseResponse<T> instance) =>
+Map<String, dynamic> _$BaseResponseToJson(BaseResponse instance) =>
     <String, dynamic>{
       'code': instance.code,
       'total': instance.total,

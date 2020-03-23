@@ -211,7 +211,7 @@ class _OldContentPage extends State<OldPage> {
                     onTap: () {
                       try {
                         AppConfig.platform
-                            .invokeMethod('share', Song.toJson(song));
+                            .invokeMethod('share', song.toJson());
                       } catch (e) {}
                     },
                     child: new Icon(

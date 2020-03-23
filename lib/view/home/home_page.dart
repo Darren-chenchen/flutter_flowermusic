@@ -72,6 +72,7 @@ class _HomeContentPage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     print('home-build(BuildContext context)');
+
     return ChangeNotifierProvider.value(
       value: _provide,
       child: Scaffold(
@@ -241,7 +242,7 @@ class _HomeContentPage extends State<HomePage> {
   }
   _clicShare(Song song) {
     try{
-      AppConfig.platform.invokeMethod('share', Song.toJson(song));
+      AppConfig.platform.invokeMethod('share', song.toJson());
     } catch(e){
     }
   }

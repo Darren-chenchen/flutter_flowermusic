@@ -18,7 +18,8 @@ Song _$SongFromJson(Map<String, dynamic> json) {
     ..imgUrl_s = json['imgUrl_s'] as String
     ..desc = json['desc'] as String
     ..isFav = json['isFav'] as bool
-    .._id = json['_id'];
+    ..id = json['_id'] as String
+    ..isExpaned = json['isExpaned'] as bool;
 }
 
 Map<String, dynamic> _$SongToJson(Song instance) => <String, dynamic>{
@@ -32,5 +33,6 @@ Map<String, dynamic> _$SongToJson(Song instance) => <String, dynamic>{
       'imgUrl_s': instance.imgUrl_s,
       'desc': instance.desc,
       'isFav': instance.isFav,
-      '_id': instance._id
+      '_id': instance.id,
+      'isExpaned': instance.isExpaned
     };

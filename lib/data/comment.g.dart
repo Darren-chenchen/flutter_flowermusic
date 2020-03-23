@@ -7,15 +7,15 @@ part of 'comment.dart';
 // **************************************************************************
 
 Comment _$CommentFromJson(Map<String, dynamic> json) {
-  return Comment()
-    ..user = json['user'] == null
-        ? null
-        : User.fromJson(json['user'] as Map<String, dynamic>)
-    ..content = json['content'] as String
-    .._id = json['_id'] as String
-    ..creatDateStr = json['creatDateStr'] as String
-    ..niceCount = json['niceCount'] as int
-    ..songId = json['songId'] as String;
+  return Comment(
+      user: json['user'] == null
+          ? null
+          : User.fromJson(json['user'] as Map<String, dynamic>),
+      content: json['content'] as String,
+      creatDateStr: json['creatDateStr'] as String,
+      niceCount: json['niceCount'] as int,
+      songId: json['songId'] as String)
+    ..id = json['_id'] as String;
 }
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
@@ -23,6 +23,6 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'content': instance.content,
       'creatDateStr': instance.creatDateStr,
       'niceCount': instance.niceCount,
-      '_id': instance._id,
-      'songId': instance.songId
+      'songId': instance.songId,
+      '_id': instance.id
     };

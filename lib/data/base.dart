@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'base.g.dart';
 
 @JsonSerializable()
-class BaseResponse<T> {
+class BaseResponse {
   int code;
   int total;
   int totalPage;
@@ -13,13 +13,13 @@ class BaseResponse<T> {
   String message;
   bool success;
 
-  BaseResponse();
+  BaseResponse({this.code, this.total, this.totalPage, this.data, this.message, this.success});
 
   factory BaseResponse.fromJson(Map<String, dynamic> json) =>
       _$BaseResponseFromJson(json);
 
-  static Map<String, dynamic> toJson(BaseResponse instance) =>
-      _$BaseResponseToJson(instance);
+  Map<String, dynamic> toJson() =>
+      _$BaseResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -33,5 +33,5 @@ class CommonResponse {
 
   factory CommonResponse.fromJson(Map<String, dynamic> json) => _$CommonResponseFromJson(json);
 
-  static Map<String, dynamic> toJson(CommonResponse instance) => _$CommonResponseToJson(instance);
+  Map<String, dynamic> toJson() => _$CommonResponseToJson(this);
 }

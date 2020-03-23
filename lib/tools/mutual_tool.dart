@@ -80,14 +80,14 @@ class MutualTools {
 //  分享
   share(Song song) {
     try{
-      AppConfig.platform.invokeMethod('share', Song.toJson(song));
+      AppConfig.platform.invokeMethod('share', song.toJson());
     } catch(e){
     }
   }
 //  播放歌曲
   beginPlay(Song song) {
     try{
-      AppConfig.platform.invokeMethod('beginPlay', Song.toJson(song));
+      AppConfig.platform.invokeMethod('beginPlay', song.toJson());
     } catch(e){
     }
   }

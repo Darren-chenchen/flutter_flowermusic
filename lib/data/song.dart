@@ -17,10 +17,8 @@ class Song {
   String desc;
   bool isFav;
 
-  String get id => _id;
-  set id(String id) {
-    _id = id;
-  }
+  @JsonKey(name: '_id', nullable: true)
+  String id;
 
   /// 自定义属性
   bool isExpaned = false;
@@ -30,6 +28,6 @@ class Song {
   factory Song.fromJson(Map<String, dynamic> json) =>
       _$SongFromJson(json);
 
-  static Map<String, dynamic> toJson(Song instance) =>
-      _$SongToJson(instance);
+  Map<String, dynamic> toJson() =>
+      _$SongToJson(this);
 }

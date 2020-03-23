@@ -12,12 +12,13 @@ class User {
   String creatDate;
   String token;
   String email;
+  @JsonKey(nullable: true)
   String userPic = '';
   User();
 
   factory User.fromJson(Map<String, dynamic> json) =>
       _$UserFromJson(json);
 
-  static Map<String, dynamic> toJson(User instance) =>
-      _$UserToJson(instance);
+  Map<String, dynamic> toJson() =>
+      _$UserToJson(this);
 }
