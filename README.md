@@ -6,7 +6,7 @@
 ## 开发环境 flutter v1.12.13+hotfix.5（如有报错可能跟flutter版本相关，可根据个人的flutter版本进行调整）
 
 
-## 个人博客了解下 https://www.darrenblog.cn/#/detail/5cd281787bb725236692b6c2
+
 
  
 # 阅读之前
